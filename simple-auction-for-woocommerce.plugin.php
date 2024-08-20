@@ -16,9 +16,6 @@ class Simple_Auction_For_WooCommerce
   private static $_instance;
 
   public $scripts;
-  public $auction_product;
-  // public $settings;
-  // public $cron;
 
   const VERSION = '1.0';
 
@@ -37,16 +34,8 @@ class Simple_Auction_For_WooCommerce
   {
 
     add_action('woocommerce_loaded', array($this, 'wc_custom_produt'));
-
-    $this->scripts = \SAFW\Plugin\Scripts::instance();
-
-    // $this->settings = \SAFW\Plugin\Settings::instance();
-
-    // Register Activation Hook
-    // register_activation_hook(SAFW_PLUGIN_DIR . 'simple-auction-for-woocommerce.php', array($this, 'activate'));
-
-    // Register Deactivation Hook
-    // register_deactivation_hook(SAFW_PLUGIN_DIR . 'simple-auction-for-woocommerce.php', array($this, 'deactivate'));
+    add_filter('product_type_selector', array($this, 'auction_custom_product_type'));
+    add_action('woocommerce_product_data_panels', array($this, 'wkwc_add_product_data_tab_content'));
   }
 
   /**
@@ -71,21 +60,47 @@ class Simple_Auction_For_WooCommerce
    */
   public function wc_custom_produt()
   {
-
-    $this->auction_product = new \SAFW\Plugin\WC_Product_Auction();
+    require_once SAFW_PLUGIN_DIR . 'includes/wc_product_auction.class.php';
   }
 
   /**
-   * Trigger on activation
+   * Custom product type.
    *
-   * @since 1.0.0
+   * @param array $types Product types.
+   *
+   * @return void
    */
-  public function activate() {}
+  public function auction_custom_product_type($types)
+  {
+    $types['auction'] = esc_html__('Auction product', 'simple-auction-for-woocommerce');
+
+    return $types;
+  }
 
   /**
-   * Trigger on deactivation
+   * Add product data tab content.
    *
-   * @since 1.0.0
+   * @return void
    */
-  public function deactivate() {}
+  public function wkwc_add_product_data_tab_content()
+  {
+    global $product_object;
+?>
+    <div id="wkwc_cusotm_product_data_html" class="panel woocommerce_options_panel">
+      <div class="options_group">
+        <?php
+        woocommerce_wp_text_input(
+          array(
+            'id'          => '_wkwc_name',
+            'label'       => esc_html__('Name', 'wkcp'),
+            'value'       => $product_object->get_meta('_wkwc_name', true),
+            'default'     => '',
+            'placeholder' => esc_html__('Enter your name', 'wkcp'),
+          )
+        );
+        ?>
+      </div>
+    </div>
+<?php
+  }
 }

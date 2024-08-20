@@ -26,5 +26,5 @@ require_once 'inc/autoloader.php';
 
 // Run
 require_once 'simple-auction-for-woocommerce.plugin.php';
-$safw = Simple_Auction_For_WooCommerce::instance();
+$safw = new Simple_Auction_For_WooCommerce();
 $GLOBALS['safw'] = $safw;
