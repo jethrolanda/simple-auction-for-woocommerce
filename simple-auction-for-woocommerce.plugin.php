@@ -39,6 +39,23 @@ class Simple_Auction_For_WooCommerce
 
     add_filter('woocommerce_product_data_tabs', array($this, 'uwa_custom_product_tabs'));
     add_action('woocommerce_product_data_panels', array($this, 'uwa_options_product_tab_content'));
+
+    // Save Auction Product Data
+    add_action(
+      'woocommerce_process_product_meta_auction',
+      array(
+        $this,
+        'uwa_save_auction_option_field',
+      )
+    );
+
+    add_action(
+      'woocommerce_process_product_meta',
+      array(
+        $this,
+        'uwa_process_product_option_field',
+      )
+    );
   }
 
   /**
@@ -144,89 +161,134 @@ class Simple_Auction_For_WooCommerce
     <div id='auction_options' class='panel woocommerce_options_panel'>
       <div class='options_group'>
         <?php
+        wp_nonce_field('save_auction_fields', 'auction_fields');
         \woocommerce_wp_select(
           array(
-            'id'      => 'woo_ua_product_condition',
+            'id'      => 'auction[type]',
             'label'   => __('Auction Type', 'simple-auction-for-woocommerce'),
             'options' => apply_filters('ultimate_woocommerce_auction_product_condition', array(
-              'new'  => __('English Auction', 'simple-auction-for-woocommerce'),
-              'used' => __('Dutch Auction', 'simple-auction-for-woocommerce'),
+              'english'  => __('English Auction', 'simple-auction-for-woocommerce'),
+              'dutch' => __('Dutch Auction', 'simple-auction-for-woocommerce'),
             )),
             'desc_tip' => true,
-            'description' => __('Set the price where the price of the product will start from.', 'ultimate-woocommerce-auction'),
+            'description' => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
+            'value' => get_post_meta($post->ID, '_auction_type', true)
           )
         );
         \woocommerce_wp_text_input(
           array(
-            'id'                => 'woo_ua_opening_price',
-            'label'             => __('Starting Price', 'ultimate-woocommerce-auction') . ' (' . get_woocommerce_currency_symbol() . ')',
+            'id'                => 'auction[starting_price]',
+            'label'             => __('Starting Price', 'simple-auction-for-woocommerce') . ' (' . get_woocommerce_currency_symbol() . ')',
             'desc_tip'          => 'true',
-            'description'       => __('Set the price where the price of the product will start from.', 'ultimate-woocommerce-auction'),
+            'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
             'data_type'         => 'price',
             'custom_attributes' => array(
               'step' => 'any',
               'min'  => '0',
             ),
+            'value' => get_post_meta($post->ID, '_auction_starting_price', true)
           )
         );
         \woocommerce_wp_text_input(
           array(
-            'id'                => 'woo_ua_opening_price',
-            'label'             => __('Lowest Price', 'ultimate-woocommerce-auction') . ' (' . get_woocommerce_currency_symbol() . ')',
+            'id'                => 'auction[lowest_price]',
+            'label'             => __('Lowest Price', 'simple-auction-for-woocommerce') . ' (' . get_woocommerce_currency_symbol() . ')',
             'desc_tip'          => 'true',
-            'description'       => __('Set the price where the price of the product will start from.', 'ultimate-woocommerce-auction'),
+            'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
             'data_type'         => 'price',
             'custom_attributes' => array(
               'step' => 'any',
               'min'  => '0',
             ),
+            'value' => get_post_meta($post->ID, '_auction_lowest_price', true)
           )
         );
         \woocommerce_wp_text_input(
           array(
-            'id'                => 'woo_ua_opening_price',
-            'label'             => __('Increment', 'ultimate-woocommerce-auction'),
+            'id'                => 'auction[increment]',
+            'label'             => __('Increment', 'simple-auction-for-woocommerce'),
             'desc_tip'          => 'true',
-            'description'       => __('Set the price where the price of the product will start from.', 'ultimate-woocommerce-auction'),
-            'data_type'         => 'price',
-            'type' => 'number',
-            'custom_attributes' => array(
-              'step' => 'any',
-              'min'  => '0',
-            ),
-          )
-        );
-        \woocommerce_wp_text_input(
-          array(
-            'id'                => 'woo_ua_opening_price',
-            'label'             => __('Start Date', 'ultimate-woocommerce-auction'),
-            'desc_tip'          => 'true',
-            'description'       => __('Set the price where the price of the product will start from.', 'ultimate-woocommerce-auction'),
+            'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
             'data_type'         => 'price',
             'type' => 'number',
             'custom_attributes' => array(
               'step' => 'any',
               'min'  => '0',
             ),
+            'value' => get_post_meta($post->ID, '_auction_increment', true)
           )
         );
         \woocommerce_wp_text_input(
           array(
-            'id'                => 'woo_ua_opening_price',
-            'label'             => __('End Date', 'ultimate-woocommerce-auction'),
+            'id'                => 'auction[start_date]',
+            'label'             => __('Start Date', 'simple-auction-for-woocommerce'),
             'desc_tip'          => 'true',
-            'description'       => __('Set the price where the price of the product will start from.', 'ultimate-woocommerce-auction'),
+            'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
             'data_type'         => 'price',
             'type' => 'number',
             'custom_attributes' => array(
               'step' => 'any',
               'min'  => '0',
             ),
+            'value' => get_post_meta($post->ID, '_auction_start_date', true)
+          )
+        );
+        \woocommerce_wp_text_input(
+          array(
+            'id'                => 'auction[end_date]',
+            'label'             => __('End Date', 'simple-auction-for-woocommerce'),
+            'desc_tip'          => 'true',
+            'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
+            'data_type'         => 'price',
+            'type' => 'number',
+            'custom_attributes' => array(
+              'step' => 'any',
+              'min'  => '0',
+            ),
+            'value' => get_post_meta($post->ID, '_auction_end_date', true)
           )
         );
         ?>
       </div>
     </div>
 <?php
+  }
+
+  /**
+   * Save Auction Product Data.
+   *
+   * @package Ultimate WooCommerce Auction
+   * @author Nitesh Singh
+   * @since 1.0
+   */
+  function uwa_save_auction_option_field($post_id)
+  {
+    if (wp_verify_nonce($_REQUEST['auction_fields'], 'save_auction_fields')) {
+      $data = $_POST['auction'];
+      if (isset($data) && !empty($data)) {
+        error_log(print_r('uwa_save_auction_option_field', true));
+        error_log(print_r($post_id, true));
+        error_log(print_r($_POST['auction'], true));
+        foreach ($data as $key => $value) {
+          update_post_meta($post_id, '_auction_' . $key, $value);
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Process/save other Product Data.
+   *
+   * @package Ultimate WooCommerce Auction
+   * @author Nitesh Singh
+   * @since 1.0
+   */
+  public function uwa_process_product_option_field($post_id)
+  {
+    if (wp_verify_nonce($_REQUEST['auction_fields'], 'save_auction_fields')) {
+      error_log(print_r('uwa_process_product_option_field', true));
+      error_log(print_r($post_id, true));
+    }
   }
 }
