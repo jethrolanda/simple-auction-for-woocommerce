@@ -33,6 +33,8 @@ class Simple_Auction_For_WooCommerce
   public function __construct()
   {
 
+    $this->scripts = SAFW\Plugin\Scripts::instance();
+
     add_action('woocommerce_loaded', array($this, 'wc_custom_produt'));
     add_filter('product_type_selector', array($this, 'auction_custom_product_type'));
     add_action('woocommerce_product_data_panels', array($this, 'wkwc_add_product_data_tab_content'));

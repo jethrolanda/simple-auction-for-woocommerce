@@ -20,6 +20,8 @@ define('SAFW_PLUGIN_URL',             plugins_url() . '/simple-auction-for-wooco
 define('SAFW_PLUGIN_DIR',             plugin_dir_path(__FILE__));
 define('SAFW_CSS_ROOT_URL',           SAFW_PLUGIN_URL . 'css/');
 define('SAFW_JS_ROOT_URL',            SAFW_PLUGIN_URL . 'js/');
+define('SAFW_TEMPLATES_ROOT_URL',     SAFW_PLUGIN_URL . 'templates/');
+define('SAFW_TEMPLATES_ROOT_DIR',     SAFW_PLUGIN_DIR . 'templates/');
 
 // Require autoloader
 require_once 'inc/autoloader.php';
