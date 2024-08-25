@@ -88,10 +88,10 @@ class Scripts
     {
 
         global $product;
-        error_log($product->get_type());
+
         if (method_exists($product, 'get_type') && $product->get_type() == 'auction') {
 
-            \wc_get_template('single-product.php', array(), SAFW_TEMPLATES_ROOT_DIR);
+            wc_get_template('single-product/add-to-cart/single-product.php', array(), '', SAFW_TEMPLATES_ROOT_DIR);
         }
     }
 }

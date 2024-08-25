@@ -8,4 +8,12 @@ if (! defined('ABSPATH')) {
   exit;
 }
 
-echo "test";
+echo "Current Price:";
+
+echo "Buy Now";
+
+echo "Make Offer";
+
+echo "Make Offer";
+
+echo "View all Offers";
