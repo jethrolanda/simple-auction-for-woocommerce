@@ -32,6 +32,11 @@ class Scripts
         // add_action('woocommerce_auction_add_to_cart', array($this, 'woocommerce_uwa_auction_add_to_cart'), 30);
         // Bidding Area On single product page
         add_action('woocommerce_auction_add_to_cart', array($this, 'woocommerce_uwa_auction_bid'));
+
+        // add_action('wp_loaded', array($this, 'add_to_cart_action'), 20);
+
+        add_filter('woocommerce_add_to_cart_validation', array($this, 'so_validate_add_cart_item'), 10, 5);
+        add_action('woocommerce_add_to_cart', array($this, 'add_to_cart_action'), 90);
     }
 
     /**
@@ -93,5 +98,17 @@ class Scripts
 
             wc_get_template('single-product/add-to-cart/single-product.php', array(), '', SAFW_TEMPLATES_ROOT_DIR);
         }
+    }
+
+    public static function so_validate_add_cart_item($passed, $product_id, $quantity, $variation_id = '', $variations = '')
+    {
+        WC()->cart->empty_cart();
+        return $passed;
+    }
+
+    public static function add_to_cart_action($url = false)
+    {
+        wp_safe_redirect(\wc_get_checkout_url());
+        exit;
     }
 }

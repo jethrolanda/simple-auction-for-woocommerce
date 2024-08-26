@@ -8,12 +8,17 @@ if (! defined('ABSPATH')) {
   exit;
 }
 
-echo "Current Price:";
+global $product;
 
-echo "Buy Now";
+?>
+<form class="cart" action="<?php echo esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post" enctype='multipart/form-data'>
+  <p>
+    <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="single_add_to_cart_button button alt<?php echo esc_attr(wc_wp_theme_get_element_class_name('button') ? ' ' . wc_wp_theme_get_element_class_name('button') : ''); ?>">Buy Now</button>
 
-echo "Make Offer";
+    <a href="#" class="button">Make Offer</a>
+  </p>
 
-echo "Make Offer";
 
-echo "View all Offers";
+  <p>Highest Offer</p>
+  <p>View all Offers</p>
+</form>

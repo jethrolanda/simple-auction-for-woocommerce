@@ -179,8 +179,8 @@ class Simple_Auction_For_WooCommerce
         );
         \woocommerce_wp_text_input(
           array(
-            'id'                => 'auction[starting_price]',
-            'label'             => __('Starting Price', 'simple-auction-for-woocommerce') . ' (' . get_woocommerce_currency_symbol() . ')',
+            'id'                => 'auction[price]',
+            'label'             => __('Buy Now Price', 'simple-auction-for-woocommerce') . ' (' . get_woocommerce_currency_symbol() . ')',
             'desc_tip'          => 'true',
             'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
             'data_type'         => 'price',
@@ -188,7 +188,7 @@ class Simple_Auction_For_WooCommerce
               'step' => 'any',
               'min'  => '0',
             ),
-            'value' => get_post_meta($post->ID, '_auction_starting_price', true)
+            'value' => get_post_meta($post->ID, '_price', true)
           )
         );
         \woocommerce_wp_text_input(
@@ -268,11 +268,12 @@ class Simple_Auction_For_WooCommerce
     if (wp_verify_nonce($_REQUEST['auction_fields'], 'save_auction_fields')) {
       $data = $_POST['auction'];
       if (isset($data) && !empty($data)) {
-        error_log(print_r('uwa_save_auction_option_field', true));
-        error_log(print_r($post_id, true));
-        error_log(print_r($_POST['auction'], true));
         foreach ($data as $key => $value) {
-          update_post_meta($post_id, '_auction_' . $key, $value);
+          if ($key === 'price') {
+            update_post_meta($post_id, $key, $value);
+          } else {
+            update_post_meta($post_id, '_auction_' . $key, $value);
+          }
         }
       }
     }
