@@ -28,6 +28,8 @@ class Scripts
     public function __construct()
     {
 
+        add_action('admin_enqueue_scripts', array($this, 'backend_script_loader'));
+
         // Product Add to cart
         // add_action('woocommerce_auction_add_to_cart', array($this, 'woocommerce_uwa_auction_add_to_cart'), 30);
         // Bidding Area On single product page
@@ -37,6 +39,11 @@ class Scripts
 
         add_filter('woocommerce_add_to_cart_validation', array($this, 'so_validate_add_cart_item'), 10, 5);
         add_action('woocommerce_add_to_cart', array($this, 'add_to_cart_action'), 90);
+    }
+
+    public function backend_script_loader()
+    {
+        wp_enqueue_script('safw-script', SAFW_PLUGIN_URL . '/js/edit-product.js', array('jquery'), '', true);
     }
 
     /**

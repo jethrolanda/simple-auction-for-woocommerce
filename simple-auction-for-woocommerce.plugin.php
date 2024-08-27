@@ -166,20 +166,22 @@ class Simple_Auction_For_WooCommerce
         wp_nonce_field('save_auction_fields', 'auction_fields');
         \woocommerce_wp_select(
           array(
-            'id'      => 'auction[type]',
-            'label'   => __('Auction Type', 'simple-auction-for-woocommerce'),
-            'options' => apply_filters('ultimate_woocommerce_auction_product_condition', array(
-              'english'  => __('English Auction', 'simple-auction-for-woocommerce'),
-              'dutch' => __('Dutch Auction', 'simple-auction-for-woocommerce'),
+            'id'          => 'auction[type]',
+            'class'       => 'auction_type',
+            'label'       => __('Auction Type', 'simple-auction-for-woocommerce'),
+            'options'     => apply_filters('ultimate_woocommerce_auction_product_condition', array(
+              'english'   => __('English Auction', 'simple-auction-for-woocommerce'),
+              'dutch'     => __('Dutch Auction', 'simple-auction-for-woocommerce'),
             )),
-            'desc_tip' => true,
+            'desc_tip'    => true,
             'description' => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
-            'value' => get_post_meta($post->ID, '_auction_type', true)
+            'value'       => get_post_meta($post->ID, '_auction_type', true)
           )
         );
         \woocommerce_wp_text_input(
           array(
             'id'                => 'auction[price]',
+            'class'             => 'auction_price',
             'label'             => __('Buy Now Price', 'simple-auction-for-woocommerce') . ' (' . get_woocommerce_currency_symbol() . ')',
             'desc_tip'          => 'true',
             'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
@@ -194,6 +196,7 @@ class Simple_Auction_For_WooCommerce
         \woocommerce_wp_text_input(
           array(
             'id'                => 'auction[lowest_price]',
+            'class'             => 'auction_lowest_price',
             'label'             => __('Lowest Price', 'simple-auction-for-woocommerce') . ' (' . get_woocommerce_currency_symbol() . ')',
             'desc_tip'          => 'true',
             'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
@@ -208,6 +211,7 @@ class Simple_Auction_For_WooCommerce
         \woocommerce_wp_text_input(
           array(
             'id'                => 'auction[increment]',
+            'class'             => 'auction_increment',
             'label'             => __('Increment', 'simple-auction-for-woocommerce'),
             'desc_tip'          => 'true',
             'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
@@ -223,30 +227,24 @@ class Simple_Auction_For_WooCommerce
         \woocommerce_wp_text_input(
           array(
             'id'                => 'auction[start_date]',
+            'class'             => 'auction_start_date',
             'label'             => __('Start Date', 'simple-auction-for-woocommerce'),
             'desc_tip'          => 'true',
             'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
-            'data_type'         => 'price',
-            'type' => 'number',
-            'custom_attributes' => array(
-              'step' => 'any',
-              'min'  => '0',
-            ),
+            'data_type'         => 'date',
+            'type'              => 'text',
             'value' => get_post_meta($post->ID, '_auction_start_date', true)
           )
         );
         \woocommerce_wp_text_input(
           array(
             'id'                => 'auction[end_date]',
+            'class'             => 'auction_end_date',
             'label'             => __('End Date', 'simple-auction-for-woocommerce'),
             'desc_tip'          => 'true',
             'description'       => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
-            'data_type'         => 'price',
-            'type' => 'number',
-            'custom_attributes' => array(
-              'step' => 'any',
-              'min'  => '0',
-            ),
+            'data_type'         => 'date',
+            'type'              => 'text',
             'value' => get_post_meta($post->ID, '_auction_end_date', true)
           )
         );
