@@ -16,6 +16,7 @@ class Simple_Auction_For_WooCommerce
   private static $_instance;
 
   public $scripts;
+  public $auction;
 
   const VERSION = '1.0';
 
@@ -34,6 +35,7 @@ class Simple_Auction_For_WooCommerce
   {
 
     $this->scripts = SAFW\Plugin\Scripts::instance();
+    $this->auction = SAFW\Plugin\Auction::instance();
 
     add_action('woocommerce_loaded', array($this, 'wc_custom_produt'));
     add_filter('product_type_selector', array($this, 'auction_custom_product_type'));
