@@ -46,6 +46,11 @@ class Scripts
 
     public function backend_script_loader()
     {
-        wp_enqueue_script('safw-script', SAFW_PLUGIN_URL . '/js/edit-product.js', array('jquery'), '', true);
+
+        // datetimepicker
+        wp_enqueue_script('safw-datetimepicker-script', SAFW_PLUGIN_URL . 'js/lib/datetimepicker/jquery.datetimepicker.full.min.js', array(), '', true);
+        wp_enqueue_style('safw-datetimepicker-style', SAFW_PLUGIN_URL . 'js/lib/datetimepicker/jquery.datetimepicker.min.css');
+
+        wp_enqueue_script('safw-edit-product-script', SAFW_PLUGIN_URL . 'js/edit-product.js', array('jquery', 'jquery-ui-core', 'jquery-ui-datepicker'), '', true);
     }
 }
