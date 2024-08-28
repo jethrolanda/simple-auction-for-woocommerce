@@ -62,7 +62,7 @@ class Scripts
     {
         global $product;
 
-        if ($product->get_type() === 'auction') {
+        if ($product && $product->get_type() === 'auction') {
             // Countdown
             wp_enqueue_script('safw-edit-countdown-script', SAFW_PLUGIN_URL . 'js/countdown.js', array(), '', true);
         }
