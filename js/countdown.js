@@ -34,18 +34,20 @@ var x = setInterval(function () {
   document.getElementById("demo").innerHTML =
     days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
-  let totalTime = endDate - startDate;
-  let progress = now - startDate;
-  let percentage = ((progress / totalTime) * 100).toFixed(2);
-  let increment = (ending_price - starting_price) * (percentage / 100);
-  console.log(ending_price, starting_price);
-  let newPrice = (parseInt(starting_price) + increment).toFixed(2);
-
-  document.getElementById("auction_price").innerHTML = "Price: " + newPrice;
-
   // If the count down is finished, write some text
   if (distance < 0) {
     clearInterval(x);
     document.getElementById("demo").innerHTML = "EXPIRED";
+    document.getElementById("auction_price").innerHTML =
+      "Price: " + ending_price;
+  } else {
+    let totalTime = endDate - startDate;
+    let progress = now - startDate;
+    let percentage = ((progress / totalTime) * 100).toFixed(2);
+    let increment = (ending_price - starting_price) * (percentage / 100);
+    console.log(ending_price, starting_price);
+    let newPrice = (parseInt(starting_price) + increment).toFixed(2);
+
+    document.getElementById("auction_price").innerHTML = "Price: " + newPrice;
   }
 }, 1000);
