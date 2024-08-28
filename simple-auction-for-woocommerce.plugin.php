@@ -207,7 +207,7 @@ class Simple_Auction_For_WooCommerce
               'step' => 'any',
               'min'  => '0',
             ),
-            'value' => get_post_meta($post->ID, '_auction_lowest_price', true)
+            'value' => get_post_meta($post->ID, '_auction_ending_price', true)
           )
         );
         \woocommerce_wp_text_input(

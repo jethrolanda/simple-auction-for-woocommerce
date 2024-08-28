@@ -1,6 +1,6 @@
 jQuery(document).ready(function ($) {
   $(".auction_start_date, .auction_end_date").datetimepicker({
-    format: "m/d/Y H:i:s"
+    format: "Y-m-d H:i"
   });
   // $(".auction_start_date, .auction_end_date").datepicker({
   //   dateFormat: "yy-dd-mm",
