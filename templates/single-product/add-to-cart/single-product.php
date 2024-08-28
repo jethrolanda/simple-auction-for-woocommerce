@@ -30,10 +30,8 @@ error_log(print_r(strtotime($end_date), true));
 
   <p>
     <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="single_add_to_cart_button button alt<?php echo esc_attr(wc_wp_theme_get_element_class_name('button') ? ' ' . wc_wp_theme_get_element_class_name('button') : ''); ?>">Buy Now</button>
-
-    <a href="#" class="button">Make Offer</a>
   </p>
-
+  <p><a href="#">Make Offer</a></p>
 
   <p>Highest Offer</p>
   <p>View all Offers</p>

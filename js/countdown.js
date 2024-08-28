@@ -37,7 +37,8 @@ var x = setInterval(function () {
   // If the count down is finished, write some text
   if (distance < 0) {
     clearInterval(x);
-    document.getElementById("demo").innerHTML = "EXPIRED";
+    document.getElementById("demo").innerHTML =
+      "EXPIRED at " + document.getElementById("auction_end_date").value;
     document.getElementById("auction_price").innerHTML =
       "Price: " + ending_price;
   } else {
