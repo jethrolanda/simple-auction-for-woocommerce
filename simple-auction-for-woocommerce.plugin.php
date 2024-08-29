@@ -230,6 +230,7 @@ class Simple_Auction_For_WooCommerce
         $date_now = wp_date('Y-m-d H:i:s', strtotime('+1 day', time()), wp_timezone());
         $start_date = get_post_meta($post->ID, '_auction_start_date', true);
         $end_date = get_post_meta($post->ID, '_auction_end_date', true);
+
         \woocommerce_wp_text_input(
           array(
             'id'          => 'auction[start_date]',

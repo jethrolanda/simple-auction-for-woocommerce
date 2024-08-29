@@ -21,8 +21,16 @@ error_log(print_r(strtotime($end_date), true));
 <form class="cart" action="<?php echo esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post" enctype='multipart/form-data'>
 
   <!-- Display the countdown timer in an element -->
-  <p id="demo"></p>
-  <p id="auction_price"></p>
+  <?php
+  echo 'Timezone: ' . esc_html(wp_timezone_string());
+  if (current_time('timestamp') >= strtotime($start_date)) {
+    echo '<div>Bid Ends: <p id="bid_ends"></p></div>';
+    echo '<p id="auction_price"></p>';
+  } else {
+    echo '<div>Starting Soon! <p id="bid_start"></p></div>';
+  }
+  ?>
+
   <input id="auction_start_date" type="hidden" value="<?php echo $start_date; ?>" />
   <input id="auction_end_date" type="hidden" value="<?php echo $end_date; ?>" />
   <input id="auction_starting_price" type="hidden" value="<?php echo $starting_price; ?>" />
