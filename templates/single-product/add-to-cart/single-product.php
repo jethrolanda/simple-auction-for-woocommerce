@@ -19,6 +19,7 @@ error_log(print_r(strtotime($start_date), true));
 error_log(print_r(strtotime($end_date), true));
 ?>
 <form class="cart" action="<?php echo esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post" enctype='multipart/form-data'>
+
   <!-- Display the countdown timer in an element -->
   <p id="demo"></p>
   <p id="auction_price"></p>
