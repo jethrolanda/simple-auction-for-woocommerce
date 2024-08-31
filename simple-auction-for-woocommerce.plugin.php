@@ -276,7 +276,7 @@ class Simple_Auction_For_WooCommerce
       if (isset($data) && !empty($data)) {
         foreach ($data as $key => $value) {
           if ($key === 'price') {
-            update_post_meta($post_id, $key, $value);
+            update_post_meta($post_id, '_' . $key, $value);
           } else {
             update_post_meta($post_id, '_auction_' . $key, $value);
           }
@@ -296,8 +296,8 @@ class Simple_Auction_For_WooCommerce
   public function uwa_process_product_option_field($post_id)
   {
     if (wp_verify_nonce($_REQUEST['auction_fields'], 'save_auction_fields')) {
-      error_log(print_r('uwa_process_product_option_field', true));
-      error_log(print_r($post_id, true));
+      // error_log(print_r('uwa_process_product_option_field', true));
+      // error_log(print_r($post_id, true));
     }
   }
 }

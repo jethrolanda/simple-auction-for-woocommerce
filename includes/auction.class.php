@@ -61,7 +61,7 @@ class Auction
     global $product;
 
     if (method_exists($product, 'get_type') && $product->get_type() == 'auction') {
-      error_log(SAFW_TEMPLATES_ROOT_DIR);
+
       \wc_get_template('single-product.php', array(), SAFW_TEMPLATES_ROOT_DIR);
       // wc_get_template_html(
       //   'single-product\add-to-cart',
