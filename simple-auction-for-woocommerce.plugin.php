@@ -37,27 +37,22 @@ class Simple_Auction_For_WooCommerce
     $this->scripts = SAFW\Plugin\Scripts::instance();
     $this->auction = SAFW\Plugin\Auction::instance();
 
-    add_action('woocommerce_loaded', array($this, 'wc_custom_produt'));
-    add_filter('product_type_selector', array($this, 'auction_custom_product_type'));
-    add_action('woocommerce_product_data_panels', array($this, 'wkwc_add_product_data_tab_content'));
+    // Init custom product type "auction"
+    add_action('woocommerce_loaded', array($this, 'init_auction_product_type'));
 
-    add_filter('woocommerce_product_data_tabs', array($this, 'uwa_custom_product_tabs'));
-    add_action('woocommerce_product_data_panels', array($this, 'uwa_options_product_tab_content'));
+    // Add product type dropdown
+    add_filter('product_type_selector', array($this, 'auction_custom_product_type'));
+
+    // Add "Auction" tab to Auction product type
+    add_filter('woocommerce_product_data_tabs', array($this, 'auction_custom_product_tabs'));
+    add_action('woocommerce_product_data_panels', array($this, 'auction_options_product_tab_content'));
 
     // Save Auction Product Data
     add_action(
       'woocommerce_process_product_meta_auction',
       array(
         $this,
-        'uwa_save_auction_option_field',
-      )
-    );
-
-    add_action(
-      'woocommerce_process_product_meta',
-      array(
-        $this,
-        'uwa_process_product_option_field',
+        'save_auction_option_field',
       )
     );
   }
@@ -82,7 +77,7 @@ class Simple_Auction_For_WooCommerce
   /**
    * Load custom product.
    */
-  public function wc_custom_produt()
+  public function init_auction_product_type()
   {
     require_once SAFW_PLUGIN_DIR . 'includes/wc_product_auction.class.php';
   }
@@ -102,40 +97,13 @@ class Simple_Auction_For_WooCommerce
   }
 
   /**
-   * Add product data tab content.
-   *
-   * @return void
-   */
-  public function wkwc_add_product_data_tab_content()
-  {
-    global $product_object;
-?>
-    <div id="wkwc_cusotm_product_data_html" class="panel woocommerce_options_panel">
-      <div class="options_group">
-        <?php
-        woocommerce_wp_text_input(
-          array(
-            'id'          => '_wkwc_name',
-            'label'       => esc_html__('Name', 'wkcp'),
-            'value'       => $product_object->get_meta('_wkwc_name', true),
-            'default'     => '',
-            'placeholder' => esc_html__('Enter your name', 'wkcp'),
-          )
-        );
-        ?>
-      </div>
-    </div>
-  <?php
-  }
-
-  /**
    * Add a custom product tab.
    *
    * @package Ultimate WooCommerce Auction
    * @author Nitesh Singh
    * @since 1.0
    */
-  public function uwa_custom_product_tabs($product_data_tabs)
+  public function auction_custom_product_tabs($product_data_tabs)
   {
     $auction_tab = array(
       'auction_tab' => array(
@@ -157,16 +125,16 @@ class Simple_Auction_For_WooCommerce
    * @author Nitesh Singh
    * @since 1.0
    */
-  public function uwa_options_product_tab_content()
+  public function auction_options_product_tab_content()
   {
     global $post;
-    $product = \wc_get_product($post->ID);
-  ?>
+    $product = wc_get_product($post->ID);
+?>
     <div id='auction_options' class='panel woocommerce_options_panel'>
       <div class='options_group'>
         <?php
         wp_nonce_field('save_auction_fields', 'auction_fields');
-        \woocommerce_wp_select(
+        woocommerce_wp_select(
           array(
             'id'          => 'auction[type]',
             'class'       => 'auction_type',
@@ -180,7 +148,7 @@ class Simple_Auction_For_WooCommerce
             'value'       => get_post_meta($post->ID, '_auction_type', true)
           )
         );
-        \woocommerce_wp_text_input(
+        woocommerce_wp_text_input(
           array(
             'id'                => 'auction[price]',
             'class'             => 'auction_price',
@@ -195,7 +163,7 @@ class Simple_Auction_For_WooCommerce
             'value' => get_post_meta($post->ID, '_price', true)
           )
         );
-        \woocommerce_wp_text_input(
+        woocommerce_wp_text_input(
           array(
             'id'                => 'auction[ending_price]',
             'class'             => 'auction_ending_price',
@@ -210,7 +178,7 @@ class Simple_Auction_For_WooCommerce
             'value' => get_post_meta($post->ID, '_auction_ending_price', true)
           )
         );
-        \woocommerce_wp_text_input(
+        woocommerce_wp_text_input(
           array(
             'id'                => 'auction[increment]',
             'class'             => 'auction_increment',
@@ -231,7 +199,7 @@ class Simple_Auction_For_WooCommerce
         $start_date = get_post_meta($post->ID, '_auction_start_date', true);
         $end_date = get_post_meta($post->ID, '_auction_end_date', true);
 
-        \woocommerce_wp_text_input(
+        woocommerce_wp_text_input(
           array(
             'id'          => 'auction[start_date]',
             'class'       => 'auction_start_date',
@@ -244,7 +212,7 @@ class Simple_Auction_For_WooCommerce
           )
         );
 
-        \woocommerce_wp_text_input(
+        woocommerce_wp_text_input(
           array(
             'id'          => 'auction[end_date]',
             'class'       => 'auction_end_date',
@@ -269,7 +237,7 @@ class Simple_Auction_For_WooCommerce
    * @author Nitesh Singh
    * @since 1.0
    */
-  function uwa_save_auction_option_field($post_id)
+  function save_auction_option_field($post_id)
   {
     if (wp_verify_nonce($_REQUEST['auction_fields'], 'save_auction_fields')) {
       $data = $_POST['auction'];
@@ -282,22 +250,6 @@ class Simple_Auction_For_WooCommerce
           }
         }
       }
-    }
-  }
-
-
-  /**
-   * Process/save other Product Data.
-   *
-   * @package Ultimate WooCommerce Auction
-   * @author Nitesh Singh
-   * @since 1.0
-   */
-  public function uwa_process_product_option_field($post_id)
-  {
-    if (wp_verify_nonce($_REQUEST['auction_fields'], 'save_auction_fields')) {
-      // error_log(print_r('uwa_process_product_option_field', true));
-      // error_log(print_r($post_id, true));
     }
   }
 }

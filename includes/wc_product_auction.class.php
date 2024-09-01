@@ -119,7 +119,7 @@ if (! class_exists('WC_Product_Auction')) {
     /**
      * Get Auction Product Current Bid
      */
-    public function get_auction_current_bid($context = 'view')
+    public function get_auction_current_bid()
     {
 
       $starting_price = get_post_meta($this->get_safw_product_id(), '_price', true);
@@ -130,7 +130,7 @@ if (! class_exists('WC_Product_Auction')) {
     /**
      * Get Auction Start Date
      */
-    public function get_auction_start_date($context = 'view')
+    public function get_auction_start_date()
     {
 
       $starting_price = get_post_meta($this->get_safw_product_id(), '_auction_start_date', true);
@@ -141,7 +141,7 @@ if (! class_exists('WC_Product_Auction')) {
     /**
      * Get Auction End Date
      */
-    public function get_auction_end_date($context = 'view')
+    public function get_auction_end_date()
     {
 
       $starting_price = get_post_meta($this->get_safw_product_id(), '_auction_end_date', true);
