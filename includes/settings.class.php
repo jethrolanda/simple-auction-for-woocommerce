@@ -43,16 +43,6 @@ class Settings
     {
         // Add new menu
         add_action('admin_menu', array($this, 'custom_menu'), 10);
-
-        // Fetch PADD colors via ajax 
-        add_action("wp_ajax_safw_settings_fetch_padd_colors", array($this, 'safw_settings_fetch_padd_colors'));
-        add_action("wp_ajax_nopriv_safw_settings_fetch_padd_colors", array($this, 'safw_settings_fetch_padd_colors'));
-
-        // Save PADD colors via ajax 
-        add_action("wp_ajax_safw_settings_save_padd_colors", array($this, 'safw_settings_save_padd_colors'));
-
-        // Delete cache
-        add_action("wp_ajax_safw_settings_delete_cache", array($this, 'safw_settings_delete_cache'));
     }
 
     /**
@@ -76,12 +66,12 @@ class Settings
     public function custom_menu()
     {
         add_menu_page(
-            'Gas Prices',
-            'Gas Prices',
+            'Auctions',
+            'Auctions',
             'edit_posts',
-            'gas_prices_settings',
-            array($this, 'gas_prices_settings_page'),
-            'dashicons-media-spreadsheet'
+            'auction_settings',
+            array($this, 'auction_settings_page'),
+            'dashicons-hammer'
         );
     }
 
@@ -90,133 +80,14 @@ class Settings
      * 
      * @since 1.0
      */
-    public function gas_prices_settings_page()
+    public function auction_settings_page()
     {
 ?>
         <div class="wrap">
-            <div id="gas-prices-settings">
+            <div id="auctions-settings">
                 <h2>Loading...</h2>
             </div>
         </div>
 <?php
-    }
-
-    /**
-     * Fetch PADD colors
-     * 
-     * @since 1.0
-     */
-    public function safw_settings_fetch_padd_colors()
-    {
-
-        if (!defined('DOING_AJAX') || !DOING_AJAX) {
-            wp_die();
-        }
-
-        /**
-         * Verify nonce
-         */
-        if (isset($_POST['nonce']) && !wp_verify_nonce($_POST['nonce'], 'colors_nonce')) {
-            wp_die();
-        }
-
-        try {
-
-            $colors = get_option('safw_padd_colors');
-
-            if (empty($colors)) {
-                $colors = $this->colors;
-            }
-
-            wp_send_json(array(
-                'status' => 'success',
-                'colors' => $colors
-            ));
-        } catch (\Exception $e) {
-
-            wp_send_json(array(
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ));
-        }
-    }
-
-    /**
-     * Save PADD colors.
-     * 
-     * @since 1.0
-     */
-    public function safw_settings_save_padd_colors()
-    {
-
-        if (!defined('DOING_AJAX') || !DOING_AJAX) {
-            wp_die();
-        }
-
-        /**
-         * Verify nonce
-         */
-        if (isset($_POST['nonce']) && !wp_verify_nonce($_POST['nonce'], 'colors_nonce')) {
-            wp_die();
-        }
-
-        try {
-
-            $colors = isset($_POST['data']) ? $_POST['data'] : array();
-
-            if (empty($colors)) {
-                $colors = $this->colors;
-            }
-
-            update_option('safw_padd_colors', $colors);
-
-            wp_send_json(array(
-                'status' => 'success',
-                'colors' => $colors
-            ));
-        } catch (\Exception $e) {
-
-            wp_send_json(array(
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ));
-        }
-    }
-
-    /**
-     * Delete cache
-     * 
-     * @since 1.0
-     */
-    public function safw_settings_delete_cache()
-    {
-
-        if (!defined('DOING_AJAX') || !DOING_AJAX) {
-            wp_die();
-        }
-
-        /**
-         * Verify nonce
-         */
-        if (isset($_POST['nonce']) && !wp_verify_nonce($_POST['nonce'], 'delete_cache_nonce')) {
-            wp_die();
-        }
-
-        try {
-
-            global $safw;
-
-            $safw->cron->safw_delete_json_cache_execute();
-
-            wp_send_json(array(
-                'status' => 'success',
-            ));
-        } catch (\Exception $e) {
-
-            wp_send_json(array(
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ));
-        }
     }
 }

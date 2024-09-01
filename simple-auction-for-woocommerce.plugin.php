@@ -17,6 +17,7 @@ class Simple_Auction_For_WooCommerce
 
   public $scripts;
   public $auction;
+  public $settings;
 
   const VERSION = '1.0';
 
@@ -36,6 +37,7 @@ class Simple_Auction_For_WooCommerce
 
     $this->scripts = SAFW\Plugin\Scripts::instance();
     $this->auction = SAFW\Plugin\Auction::instance();
+    $this->settings = SAFW\Plugin\Settings::instance();
 
     // Init custom product type "auction"
     add_action('woocommerce_loaded', array($this, 'init_auction_product_type'));
@@ -138,14 +140,30 @@ class Simple_Auction_For_WooCommerce
           array(
             'id'          => 'auction[type]',
             'class'       => 'auction_type',
-            'label'       => __('Auction Type', 'simple-auction-for-woocommerce'),
-            'options'     => apply_filters('ultimate_woocommerce_auction_product_condition', array(
+            'label'       => __('Type', 'simple-auction-for-woocommerce'),
+            'options'     => apply_filters('safw_auction_type_options', array(
+              'english'           => __('English Auction', 'simple-auction-for-woocommerce'),
+              'dutch'             => __('Dutch Auction', 'simple-auction-for-woocommerce'),
               'incresing_price'   => __('Increasing Price', 'simple-auction-for-woocommerce'),
               'decreasing_price'  => __('Decreasing Price', 'simple-auction-for-woocommerce'),
             )),
             'desc_tip'    => true,
             'description' => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
             'value'       => get_post_meta($post->ID, '_auction_type', true)
+          )
+        );
+        woocommerce_wp_select(
+          array(
+            'id'          => 'auction[condition]',
+            'class'       => 'auction_condition',
+            'label'       => __('Condition', 'simple-auction-for-woocommerce'),
+            'options'     => apply_filters('safw_auction_condition_options', array(
+              'new'   => __('New', 'simple-auction-for-woocommerce'),
+              'old'  => __('Old', 'simple-auction-for-woocommerce'),
+            )),
+            'desc_tip'    => true,
+            'description' => __('Set the price where the price of the product will start from.', 'simple-auction-for-woocommerce'),
+            'value'       => get_post_meta($post->ID, '_auction_condition', true)
           )
         );
         woocommerce_wp_text_input(

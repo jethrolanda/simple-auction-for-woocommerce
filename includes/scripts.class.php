@@ -48,6 +48,12 @@ class Scripts
         return self::$_instance;
     }
 
+    /**
+     * Load wp admin backend scripts
+     *
+     * @since 1.0
+     * @return bool
+     */
     public function backend_script_loader()
     {
 
@@ -58,13 +64,21 @@ class Scripts
         wp_enqueue_script('safw-edit-product-script', SAFW_PLUGIN_URL . 'js/edit-product.js', array('jquery', 'jquery-ui-core', 'jquery-ui-datepicker'), '', true);
     }
 
+    /**
+     * Load wp frontend scripts
+     *
+     * @since 1.0
+     * @return bool
+     */
     public function frontend_script_loader()
     {
         global $product;
 
         if ($product && $product->get_type() === 'auction') {
+
             // Styles
             wp_enqueue_style('safw-frontend-styles', SAFW_PLUGIN_URL . 'css/style.min.css', array(), '');
+
             // Countdown
             wp_enqueue_script('safw-product-countdown-script', SAFW_PLUGIN_URL . 'js/countdown.js', array(), '', true);
         }

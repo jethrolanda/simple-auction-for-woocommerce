@@ -22,14 +22,14 @@ class Auction
    */
   public function __construct()
   {
-    // Product Add to cart
-    // add_action('woocommerce_auction_add_to_cart', array($this, 'woocommerce_uwa_auction_add_to_cart'), 30);
+
     // Bidding Area On single product page
-    add_action('woocommerce_auction_add_to_cart', array($this, 'woocommerce_uwa_auction_bid'));
+    add_action('woocommerce_auction_add_to_cart', array($this, 'display_auction_data_single_product_page'));
 
-    // add_action('wp_loaded', array($this, 'add_to_cart_action'), 20);
-
+    // Clear cart on add to cart
     add_filter('woocommerce_add_to_cart_validation', array($this, 'so_validate_add_cart_item'), 10, 5);
+
+    // Redirect to checkout page
     add_action('woocommerce_add_to_cart', array($this, 'add_to_cart_action'), 90);
   }
 
@@ -46,45 +46,15 @@ class Auction
     return self::$_instance;
   }
 
-
-  /**
-   *  Auction Product Add to Cart Area.
-   *
-   * @package Ultimate WooCommerce Auction
-   * @author Nitesh Singh
-   * @since 1.0
-   * @return void
-   */
-  public function woocommerce_uwa_auction_add_to_cart()
-  {
-
-    global $product;
-
-    if (method_exists($product, 'get_type') && $product->get_type() == 'auction') {
-
-      \wc_get_template('single-product.php', array(), SAFW_TEMPLATES_ROOT_DIR);
-      // wc_get_template_html(
-      //   'single-product\add-to-cart',
-      //   array(
-      //     'test' => "123"
-      //   ),
-      //   '',
-      //   SAFW_TEMPLATES_ROOT_DIR
-      // );
-    }
-  }
-
   /**
    * Auction Page template
    *
    * Add the auction template
-   *
-   * @package Ultimate WooCommerce Auction
-   * @author Nitesh Singh
+   * 
    * @since 1.0
    * @return void
    */
-  public function woocommerce_uwa_auction_bid()
+  public function display_auction_data_single_product_page()
   {
 
     global $product;
@@ -95,12 +65,24 @@ class Auction
     }
   }
 
+  /**
+   * Empty cart on add to cart
+   *
+   * @since 1.0
+   * @return bool
+   */
   public static function so_validate_add_cart_item($passed, $product_id, $quantity, $variation_id = '', $variations = '')
   {
     WC()->cart->empty_cart();
     return $passed;
   }
 
+  /**
+   * Rediret to checkout page on add to cart
+   *
+   * @since 1.0
+   * @return void
+   */
   public static function add_to_cart_action($url = false)
   {
     wp_safe_redirect(\wc_get_checkout_url());
