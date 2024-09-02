@@ -42,7 +42,8 @@ if (! class_exists('WC_Product_Auction')) {
      */
     public function get_price_html($price = '')
     {
-
+      global $safw;
+      if ($safw->is_free_plugin()) return apply_filters('woocommerce_get_price_html', wc_price($this->get_price()), $this);
       // $id = $this->get_safw_product_id();
 
       // if ($this->is_woo_ua_closed() && $this->is_woo_ua_started()) {
@@ -115,6 +116,37 @@ if (! class_exists('WC_Product_Auction')) {
     }
 
     // HELPER FUNCTIONS
+
+    /**
+     * Get Auction Type
+     */
+    public function get_auction_type()
+    {
+
+      $type = get_post_meta($this->get_safw_product_id(), '_auction_type', true);
+
+      return $type;
+    }
+
+    /**
+     * Get Item Condition
+     */
+    public function get_auction_item_condition()
+    {
+
+      $condition = get_post_meta($this->get_safw_product_id(), '_auction_condition', true);
+
+      switch ($condition) {
+        case "new":
+          return "New";
+          break;
+        case "old":
+          return "Old";
+          break;
+        default:
+          return "New";
+      }
+    }
 
     /**
      * Get Auction Product Current Bid

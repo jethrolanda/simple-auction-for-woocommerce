@@ -81,6 +81,14 @@ class Scripts
 
             // Countdown
             wp_enqueue_script('safw-product-countdown-script', SAFW_PLUGIN_URL . 'js/countdown.js', array(), '', true);
+
+            // Bid
+            wp_enqueue_script('safw-product-bid-script', SAFW_PLUGIN_URL . 'js/bid.js', array(), '', true);
+            wp_localize_script('safw-product-bid-script', 'bid_script', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'uid' => get_current_user_id(),
+                'pid' => $product->get_id(),
+            ));
         }
     }
 }
