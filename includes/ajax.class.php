@@ -75,9 +75,10 @@ class AJAX
         $offers = array();
       }
 
-      array_push($offers, array($uid => array(
+      array_push($offers, array(
+        'uid' => $uid,
         'price' => $offer
-      )));
+      ));
 
       update_post_meta($pid, '_auction_offers', $offers);
       error_log(print_r($offers, true));

@@ -180,5 +180,16 @@ if (! class_exists('WC_Product_Auction')) {
 
       return $starting_price;
     }
+
+    /**
+     * Get Auction End Date
+     */
+    public function get_all_offers()
+    {
+
+      $offers = get_post_meta($this->get_safw_product_id(), '_auction_offers', true);
+
+      return $offers;
+    }
   }
 }

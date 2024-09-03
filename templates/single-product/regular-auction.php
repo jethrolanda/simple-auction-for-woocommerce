@@ -50,4 +50,21 @@ require_once SAFW_PLUGIN_DIR . 'templates/modal.php';
 
   <p><small>Highest Offer</small></p>
   <p><small>View all Offers</small></p>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+    </tr>
+    <?php
+    $offers = $product->get_all_offers();
+    foreach ($offers as $offer) {
+      echo '<tr>';
+      $user = get_userdata($offer['uid']);
+      // error_log(print_r($user, true));
+      echo "<td>" . $user->display_name . "</td>";
+      echo "<td>" . $offer['price'] . "</td>";
+      echo '</tr>';
+    }
+    ?>
+  </table>
 </form>
