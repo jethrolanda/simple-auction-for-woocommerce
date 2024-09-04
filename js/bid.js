@@ -29,9 +29,9 @@ jQuery(document).ready(function ($) {
   $(document).on("data-attribute-changed", function (e, param) {
     var offers = $("form.cart").data("product-attr");
     console.log(e, param, offers);
-    $("#bid-offers");
-    $(`<tr><td>${param.name}</td><td>${param.price}</td></tr>`)
-      .insertAfter("table#bid-offers tr:nth-child(1)")
+    $(".bid-offers");
+    $(`<tr><td>${param.name}</td><td>${param.price}</td><td>Time</td></tr>`)
+      .insertAfter(".bid-offers tr:nth-child(1)")
       .animate({ backgroundColor: "green" }, 400);
   });
 

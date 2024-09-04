@@ -52,11 +52,13 @@ $product_info = array('offers' => $offers);
   <p><a href="#" id="myBtn">Make Offer</a></p>
 
   <p><small>Highest Offer</small></p>
-  <p><small>View all Offers</small></p>
-  <table cellspacing="10" id="bid-offers">
+  <p><small>All Offers</small></p>
+  <table class="bid-offers" cellspacing="0">
     <tr>
       <th>Name</th>
-      <th>Price</th>
+      <th>Bid</th>
+      <th>Time
+      <th>
     </tr>
     <?php
 
@@ -66,6 +68,7 @@ $product_info = array('offers' => $offers);
       // error_log(print_r($user, true));
       echo "<td>" . $user->display_name . "</td>";
       echo "<td>" . $offer['price'] . "</td>";
+      echo "<td>Time</td>";
       echo '</tr>';
     }
     ?>
