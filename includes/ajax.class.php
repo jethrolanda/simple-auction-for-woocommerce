@@ -12,7 +12,7 @@ namespace SAFW\Plugin;
 defined('ABSPATH') || exit;
 
 /**
- * WP Settings Class.
+ * AJAX Class.
  */
 class AJAX
 {
@@ -83,8 +83,14 @@ class AJAX
       update_post_meta($pid, '_auction_offers', $offers);
       error_log(print_r($offers, true));
 
+      $user = get_userdata($uid);
       wp_send_json(array(
         'status' => 'success',
+        'data' => array(
+          'name' => $user->display_name,
+          'price' => $offer
+        ),
+        'offers' => $offers
       ));
     } catch (\Exception $e) {
 

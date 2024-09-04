@@ -17,9 +17,12 @@ $starting_price = get_post_meta($id, '_price', true);
 $ending_price = get_post_meta($id, '_auction_ending_price', true);
 
 require_once SAFW_PLUGIN_DIR . 'templates/modal.php';
+
+$offers = $product->get_all_offers();
+$product_info = array('offers' => $offers);
 ?>
 
-<form class="cart" action="<?php echo esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post" enctype='multipart/form-data'>
+<form class="cart" data-product-attr="<?php echo htmlspecialchars(json_encode($product_info), ENT_QUOTES, 'UTF-8'); ?>" action="<?php echo esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post" enctype='multipart/form-data'>
 
   <!-- Display the countdown timer in an element -->
   <p>Condition: <?php echo $product->get_auction_item_condition(); ?></p>
@@ -50,13 +53,13 @@ require_once SAFW_PLUGIN_DIR . 'templates/modal.php';
 
   <p><small>Highest Offer</small></p>
   <p><small>View all Offers</small></p>
-  <table>
+  <table cellspacing="10" id="bid-offers">
     <tr>
       <th>Name</th>
       <th>Price</th>
     </tr>
     <?php
-    $offers = $product->get_all_offers();
+
     foreach ($offers as $offer) {
       echo '<tr>';
       $user = get_userdata($offer['uid']);

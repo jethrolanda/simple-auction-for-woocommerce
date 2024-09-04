@@ -9,7 +9,7 @@ namespace SAFW\Plugin;
 defined('ABSPATH') || exit;
 
 /**
- * WP Settings Class.
+ * Shortcodes Class.
  */
 class Shortcodes
 {

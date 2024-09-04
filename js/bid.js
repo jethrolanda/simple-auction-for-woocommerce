@@ -25,9 +25,21 @@ window.onclick = function (event) {
 };
 
 jQuery(document).ready(function ($) {
+  // Here you register for the event and do whatever you need to do.
+  $(document).on("data-attribute-changed", function (e, param) {
+    var offers = $("form.cart").data("product-attr");
+    console.log(e, param, offers);
+    $("#bid-offers");
+    $(`<tr><td>${param.name}</td><td>${param.price}</td></tr>`)
+      .insertAfter("table#bid-offers tr:nth-child(1)")
+      .animate({ backgroundColor: "green" }, 400);
+  });
+
   $("#myModal")
     .find(".place-offer")
     .on("click", function () {
+      var offers = $("form.cart").data("product-attr");
+      console.log(offers);
       var offer = $("#myModal").find(".qty").val();
       var uid = bid_script.uid;
       var pid = bid_script.pid;
@@ -44,12 +56,14 @@ jQuery(document).ready(function ($) {
             pid
           },
           success: function (response) {
-            alert("Your vote could not be added");
-            alert(response);
+            $("form.cart").data("product-attr", response.offers);
+            // Whenever you change the attribute you will user the .trigger
+            // method. The name of the event is arbitrary
+            $(document).trigger("data-attribute-changed", response.data);
           }
         });
       } else {
-        alert("test");
+        console.log("offer cant be 0");
       }
     });
 });

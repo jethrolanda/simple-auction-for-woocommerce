@@ -15,7 +15,7 @@ class Auction
   protected static $_instance = null;
 
   /**
-   * Auction_CPT constructor
+   * Auction constructor
    *   
    * @access public
    * @since 1.0
