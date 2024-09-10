@@ -52,6 +52,43 @@ $product_info = array('offers' => $offers);
 
   <p><small>Highest Offer</small></p>
   <p><small>All Offers</small></p>
+
+</form>
+
+<?php
+// Global State
+wp_interactivity_state('clickme', array(
+  'someValue' => 'asd'
+));
+
+$offers_data = array();
+foreach ($offers as $key => $offer) {
+  $user = get_userdata($offer['uid']);
+  // error_log(print_r($user, true));
+  $offers_data[] = array(
+    'id' => $key,
+    'name' => $user->display_name,
+    'price' => $offer['price']
+  );
+}
+// Local State/Context
+$context = array('isOpen' => false, 'offers' => $offers_data);
+// wp_interactivity_data_wp_context() = data-wp-context directive
+?>
+<div
+  class="clickme"
+  data-wp-interactive="clickme"
+  data-wp-watch="callbacks.logIsOpen"
+  <?php echo wp_interactivity_data_wp_context($context); ?>>
+  <!-- Make Offer -->
+  <button
+    data-wp-on--click="actions.toggle"
+    data-wp-bind--aria-expanded="context.isOpen"
+    aria-controls="p-1">
+    Toggle
+  </button>
+
+  <!-- Active Offers -->
   <table class="bid-offers" cellspacing="0">
     <tr>
       <th>Name</th>
@@ -61,25 +98,20 @@ $product_info = array('offers' => $offers);
     </tr>
     <?php
 
-    foreach ($offers as $offer) {
-      echo '<tr>';
-      $user = get_userdata($offer['uid']);
-      // error_log(print_r($user, true));
-      echo "<td>" . $user->display_name . "</td>";
-      echo "<td>" . $offer['price'] . "</td>";
-      echo "<td>Time</td>";
-      echo '</tr>';
+    foreach ($context['offers'] as $offer) {
+      error_log(print_r($offer, true));
+    ?>
+      <tr <?php echo wp_interactivity_data_wp_context($offer); ?>>
+        <td data-wp-text="context.name"></td>
+        <td data-wp-text="context.price"></td>
+        <td data-wp-text="context.name"></td>
+      </tr>
+    <?php
     }
     ?>
   </table>
 
-</form>
-
-<div
-  class="clickme"
-  data-wp-interactive="clickme"
-  data-wp-context='{"isOpen": false }'
-  data-wp-watch="callbacks.logIsOpen">
+  </ul>
   <button
     data-wp-on--click="actions.toggle"
     data-wp-bind--aria-expanded="context.isOpen"

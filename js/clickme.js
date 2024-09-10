@@ -5,6 +5,7 @@ const { state } = store("clickme", {
   actions: {
     toggle: () => {
       const context = getContext();
+      console.log(state.someValue);
       context.isOpen = !context.isOpen;
     }
   },
