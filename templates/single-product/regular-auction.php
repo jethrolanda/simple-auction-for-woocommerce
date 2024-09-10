@@ -26,13 +26,12 @@ $product_info = array('offers' => $offers);
 
   <!-- Display the countdown timer in an element -->
   <p>Condition: <?php echo $product->get_auction_item_condition(); ?></p>
-  <p>Timezone: <?php echo esc_html(wp_timezone_string()); ?></p>
   <?php
   // Auction Started
   if (current_time('timestamp') >= strtotime($start_date)) {
     echo '<div>';
-    echo '<p>Time left: <span id="bid_ends"></span></p>';
-    $newDate = date("M d, Y H:i", strtotime($end_date));
+    echo '<p>Time left: <span id="bid_ends"></span> ' . esc_html(wp_timezone_string()) . '</p>';
+    $newDate = date("M d, Y H:i", strtotime($end_date)) . ' ' . esc_html(wp_timezone_string());
     echo '<p>Auction ends: ' . $newDate . '</p>';
     echo '</div>';
   } else {
@@ -73,4 +72,22 @@ $product_info = array('offers' => $offers);
     }
     ?>
   </table>
+
 </form>
+
+<div
+  class="clickme"
+  data-wp-interactive="clickme"
+  data-wp-context='{"isOpen": false }'
+  data-wp-watch="callbacks.logIsOpen">
+  <button
+    data-wp-on--click="actions.toggle"
+    data-wp-bind--aria-expanded="context.isOpen"
+    aria-controls="p-1">
+    Toggle
+  </button>
+
+  <p id="p-1" data-wp-bind--hidden="!context.isOpen">
+    This element is now visible!
+  </p>
+</div>

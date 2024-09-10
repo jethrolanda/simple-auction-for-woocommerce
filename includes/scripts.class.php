@@ -89,6 +89,9 @@ class Scripts
                 'uid' => get_current_user_id(),
                 'pid' => $product->get_id(),
             ));
+
+            // Interactivity api // wp_register_script_module
+            wp_enqueue_script_module('clickme', SAFW_PLUGIN_URL . 'js/clickme.js', ['@wordpress/interactivity'], false);
         }
     }
 }
