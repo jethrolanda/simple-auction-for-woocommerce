@@ -57,10 +57,6 @@ $product_info = array('offers' => $offers);
 
 <?php
 // Global State
-wp_interactivity_state('clickme', array(
-  'someValue' => 'asd'
-));
-
 $offers_data = array();
 foreach ($offers as $key => $offer) {
   $user = get_userdata($offer['uid']);
@@ -71,6 +67,16 @@ foreach ($offers as $key => $offer) {
     'price' => $offer['price']
   );
 }
+wp_interactivity_state('clickme', array(
+  'ajax_url' => admin_url('admin-ajax.php'),
+  'nonce'   => wp_create_nonce('modal_place_offer'),
+  'uid' => get_current_user_id(),
+  'pid' => $product->get_id(),
+  'offerPrice' => 0,
+
+));
+
+
 // Local State/Context
 $context = array('isOpen' => false, 'offers' => $offers_data);
 // wp_interactivity_data_wp_context() = data-wp-context directive
@@ -81,14 +87,29 @@ $context = array('isOpen' => false, 'offers' => $offers_data);
   data-wp-watch="callbacks.logIsOpen"
   <?php echo wp_interactivity_data_wp_context($context); ?>>
   <!-- Make Offer -->
-  <button
-    data-wp-on--click="actions.toggle"
-    data-wp-bind--aria-expanded="context.isOpen"
-    aria-controls="p-1">
-    Toggle
-  </button>
+  <div>
+    <label for="offer-price">Offer Price:</label>
+    <input type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice">
+    <button
+      data-wp-on--click="actions.submitOffer">
+      Make Offer
+    </button>
+  </div>
+
 
   <!-- Active Offers -->
+  <ul>
+    <template
+      data-wp-each--offer="context.offers"
+      data-wp-each-key="context.offer.id">
+      <li>
+        <span data-wp-text="context.offer.name"></span>
+        <span data-wp-text="context.offer.price"></span>
+        <span data-wp-text="context.offer.price"></span>
+      </li>
+    </template>
+  </ul>
+  <!-- 
   <table class="bid-offers" cellspacing="0">
     <tr>
       <th>Name</th>
@@ -96,20 +117,14 @@ $context = array('isOpen' => false, 'offers' => $offers_data);
       <th>Time
       <th>
     </tr>
-    <?php
-
-    foreach ($context['offers'] as $offer) {
-      error_log(print_r($offer, true));
-    ?>
+    <?php foreach ($offers_data as $offer) {  ?>
       <tr <?php echo wp_interactivity_data_wp_context($offer); ?>>
         <td data-wp-text="context.name"></td>
         <td data-wp-text="context.price"></td>
         <td data-wp-text="context.name"></td>
       </tr>
-    <?php
-    }
-    ?>
-  </table>
+    <?php } ?>
+  </table> -->
 
   </ul>
   <button
