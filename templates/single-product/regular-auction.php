@@ -56,29 +56,32 @@ $product_info = array('offers' => $offers);
 </form>
 
 <?php
-// Global State
+
 $offers_data = array();
-foreach ($offers as $key => $offer) {
-  $user = get_userdata($offer['uid']);
-  // error_log(print_r($user, true));
-  $offers_data[] = array(
-    'id' => $key,
-    'name' => $user->display_name,
-    'price' => $offer['price']
-  );
+if (!empty($offers)) {
+  foreach ($offers as $key => $offer) {
+    $user = get_userdata($offer['uid']);
+    $offers_data[] = array(
+      'id' => $key,
+      'name' => $user->display_name,
+      'price' => $offer['price'],
+      'uid' => $offer['uid']
+    );
+  }
 }
+
+
+// Global State
 wp_interactivity_state('clickme', array(
   'ajax_url' => admin_url('admin-ajax.php'),
   'nonce'   => wp_create_nonce('modal_place_offer'),
   'uid' => get_current_user_id(),
   'pid' => $product->get_id(),
-  'offerPrice' => 0,
-
 ));
 
 
 // Local State/Context
-$context = array('isOpen' => false, 'offers' => $offers_data);
+$context = array('isOpen' => false, 'offers' => $offers_data, 'offerPrice' => 0, 'test' => 'asdasdasd');
 // wp_interactivity_data_wp_context() = data-wp-context directive
 ?>
 <div
@@ -134,7 +137,7 @@ $context = array('isOpen' => false, 'offers' => $offers_data);
     Toggle
   </button>
 
-  <p id="p-1" data-wp-bind--hidden="!context.isOpen">
+  <p id="p-1" data-wp-bind--hidden="!context.isOpen" data-wp-text="context.test">
     This element is now visible!
   </p>
 </div>

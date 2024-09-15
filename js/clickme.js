@@ -6,44 +6,51 @@ const { state } = store("clickme", {
     *submitOffer() {
       try {
         const context = getContext();
-        const formData = new FormData();
-        formData.append("action", "safw_place_offer");
-        formData.append("nonce", state.nonce);
-        formData.append("offer", state.offerPrice);
-        formData.append("uid", state.uid);
-        formData.append("pid", state.pid);
-        const data = yield fetch(state.ajax_url, {
-          method: "POST",
-          body: formData
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data.status, data.data);
-            if (data.status === "success") {
-              context.offers.unshift(data.data);
-            }
-          });
-        // console.log("Server data!", data);
+
+        const index = context.offers.findIndex((offer) => {
+          return offer.uid == state.uid;
+        });
+        console.log(typeof index, index);
+        // If no offer for this user then create new offer
+        // else show error
+        if (index < 0) {
+          const formData = new FormData();
+          formData.append("action", "safw_place_offer");
+          formData.append("nonce", state.nonce);
+          formData.append("offer", context.offerPrice);
+          formData.append("uid", state.uid);
+          formData.append("pid", state.pid);
+
+          yield fetch(state.ajax_url, {
+            method: "POST",
+            body: formData
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data.status, data.data);
+              if (data.status === "success") {
+                context.offers.unshift(data.data);
+              }
+            });
+        } else {
+          console.log("you already provided an offer");
+        }
       } catch (e) {
-        // Something went wrong!
+        console.log(e);
       }
-    },
-    makeOffer: (e) => {
-      const element = getElement();
-      // Logs attributes
-      console.log("element attributes => ", element.attributes);
-      console.log("making offer", e);
     },
     toggle: () => {
       const context = getContext();
       console.log(state.someValue);
       context.isOpen = !context.isOpen;
+      context.offers.pop();
     }
   },
   callbacks: {
     setOfferPrice: () => {
+      const context = getContext();
       const { ref } = getElement();
-      state.offerPrice = ref.value;
+      context.offerPrice = ref.value;
     },
     logIsOpen: () => {
       const context = getContext();
