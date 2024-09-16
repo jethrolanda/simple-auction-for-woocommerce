@@ -26,3 +26,24 @@
     background-color: #eeeeee; 
   }
 }
+
+.list-offers{
+  list-style: none;
+  padding: 0px;
+  
+  li { 
+    background: #fafafa; 
+    display: flex;
+
+    &:first-child{
+      font-weight: bold;
+    }
+    span{
+      flex-grow: 1;
+      width: 33%;
+      padding: 10px 20px;
+      text-align: center;
+    }
+  }
+  li:nth-child(odd) { background: #eeeeee; }
+}

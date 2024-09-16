@@ -10,10 +10,12 @@ const { state } = store("clickme", {
         const index = context.offers.findIndex((offer) => {
           return offer.uid == state.uid;
         });
-        console.log(typeof index, index);
-        // If no offer for this user then create new offer
-        // else show error
-        if (index < 0) {
+        console.log(context.offerPrice);
+        if (context.offerPrice === 0 || context.offerPrice === "") {
+          console.log("Offer price must not empty");
+        } else if (index < 0) {
+          // If no offer for this user then create new offer
+          // else show error
           const formData = new FormData();
           formData.append("action", "safw_place_offer");
           formData.append("nonce", state.nonce);

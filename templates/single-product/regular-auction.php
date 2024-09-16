@@ -89,19 +89,24 @@ $context = array('isOpen' => false, 'offers' => $offers_data, 'offerPrice' => 0,
   data-wp-interactive="clickme"
   data-wp-watch="callbacks.logIsOpen"
   <?php echo wp_interactivity_data_wp_context($context); ?>>
+
   <!-- Make Offer -->
   <div>
-    <label for="offer-price">Offer Price:</label>
-    <input type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice">
+    <input class="input-text" type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice">
     <button
+      class="woocommerce-Button button wp-element-button"
       data-wp-on--click="actions.submitOffer">
-      Make Offer
+      Place Bid
     </button>
   </div>
 
-
   <!-- Active Offers -->
-  <ul>
+  <ul class="list-offers">
+    <li>
+      <span>Name</span>
+      <span>Price</span>
+      <span>Date</span>
+    </li>
     <template
       data-wp-each--offer="context.offers"
       data-wp-each-key="context.offer.id">
