@@ -91,7 +91,7 @@ class Scripts
             ));
 
             // Interactivity api // wp_register_script_module
-            wp_enqueue_script_module('clickme', SAFW_PLUGIN_URL . 'js/clickme.js', ['@wordpress/interactivity'], false);
+            wp_enqueue_script_module('auction', SAFW_PLUGIN_URL . 'js/auction.js', ['@wordpress/interactivity'], false);
         }
     }
 }

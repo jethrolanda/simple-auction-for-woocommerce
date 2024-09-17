@@ -72,23 +72,34 @@ if (!empty($offers)) {
 
 
 // Global State
-wp_interactivity_state('clickme', array(
+wp_interactivity_state('auction', array(
   'ajax_url' => admin_url('admin-ajax.php'),
-  'nonce'   => wp_create_nonce('modal_place_offer'),
+  'nonce' => wp_create_nonce('modal_place_offer'),
   'uid' => get_current_user_id(),
   'pid' => $product->get_id(),
+  'start_date' => $product->get_auction_start_date(),
+  'end_date' => $product->get_auction_end_date(),
+  'bidding_started' => current_time('timestamp') >= strtotime($start_date)
 ));
 
 
 // Local State/Context
-$context = array('isOpen' => false, 'offers' => $offers_data, 'offerPrice' => 0, 'test' => 'asdasdasd');
+$context = array('isOpen' => false, 'offers' => $offers_data, 'offerPrice' => 0);
 // wp_interactivity_data_wp_context() = data-wp-context directive
 ?>
 <div
-  class="clickme"
-  data-wp-interactive="clickme"
-  data-wp-watch="callbacks.logIsOpen"
+  class="auction"
+  data-wp-interactive="auction"
+  data-wp-watch="callbacks.timer"
   <?php echo wp_interactivity_data_wp_context($context); ?>>
+
+  <!-- Countdown Timer -->
+  <div data-wp-bind--hidden="state.bidding_started">
+    <p>Time left: <span id="bidding_started"></span></p>
+  </div>
+  <div data-wp-bind--hidden="!state.bidding_started">
+    <p>Starting Soon! <span id="bidding_soon"></span></p>
+  </div>
 
   <!-- Make Offer -->
   <div>
@@ -117,32 +128,12 @@ $context = array('isOpen' => false, 'offers' => $offers_data, 'offerPrice' => 0,
       </li>
     </template>
   </ul>
-  <!-- 
-  <table class="bid-offers" cellspacing="0">
-    <tr>
-      <th>Name</th>
-      <th>Bid</th>
-      <th>Time
-      <th>
+  <?php foreach ($offers_data as $offer) {  ?>
+    <tr <?php echo wp_interactivity_data_wp_context($offer); ?>>
+      <td data-wp-text="context.name"></td>
+      <td data-wp-text="context.price"></td>
+      <td data-wp-text="context.name"></td>
     </tr>
-    <?php foreach ($offers_data as $offer) {  ?>
-      <tr <?php echo wp_interactivity_data_wp_context($offer); ?>>
-        <td data-wp-text="context.name"></td>
-        <td data-wp-text="context.price"></td>
-        <td data-wp-text="context.name"></td>
-      </tr>
-    <?php } ?>
-  </table> -->
-
+  <?php } ?>
   </ul>
-  <button
-    data-wp-on--click="actions.toggle"
-    data-wp-bind--aria-expanded="context.isOpen"
-    aria-controls="p-1">
-    Toggle
-  </button>
-
-  <p id="p-1" data-wp-bind--hidden="!context.isOpen" data-wp-text="context.test">
-    This element is now visible!
-  </p>
 </div>
