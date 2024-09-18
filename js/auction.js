@@ -10,7 +10,7 @@ const { state } = store("auction", {
         const index = context.offers.findIndex((offer) => {
           return offer.uid == state.uid;
         });
-        console.log(context.offerPrice);
+
         if (context.offerPrice === 0 || context.offerPrice === "") {
           console.log("Offer price must not empty");
         } else if (index < 0) {
@@ -51,16 +51,22 @@ const { state } = store("auction", {
     timer: () => {
       const context = getContext();
 
+      const endDate = new Date(context.end_date).getTime();
+
+      const startDate = new Date(context.start_date).getTime();
+
       var x = setInterval(function () {
         // Get today's date and time
         var now = new Date().getTime();
 
         // Find the distance between now and the count down date
 
-        if (state.bidding_started) {
-          var distance = startDate - now;
-        } else {
+        // The auction has started
+        if (context.is_bidding_started) {
           var distance = endDate - now;
+        } else {
+          // Future auction
+          var distance = startDate - now;
         }
 
         // Time calculations for days, hours, minutes and seconds
@@ -72,25 +78,21 @@ const { state } = store("auction", {
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         // Display the result in the element with id="bidding_timeout"
-        if (state.bidding_started) {
-          document.getElementById("bidding_started").innerHTML =
-            days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+        let timer = `${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds`;
+        if (context.is_bidding_started) {
+          context.time_left = `Time Left: ${timer}`;
         } else {
-          document.getElementById("bidding_soon").innerHTML =
-            days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+          context.time_left = `Starting Soon: ${timer}`;
         }
 
         // If the count down is finished, write some text
         if (distance < 0) {
           clearInterval(x);
-          if (state.bidding_started) {
-            document.getElementById("bidding_started").innerHTML =
-              "EXPIRED at " + document.getElementById("auction_end_date").value;
-            document.getElementById("auction_price").innerHTML =
-              "Price: " + ending_price;
+          if (context.is_bidding_started) {
+            context.auction_price = ending_price;
           }
         } else {
-          if (state.bidding_started) {
+          if (context.is_bidding_started) {
             let totalTime = endDate - startDate;
             let progress = now - startDate;
             let percentage = ((progress / totalTime) * 100).toFixed(2);
@@ -99,8 +101,7 @@ const { state } = store("auction", {
 
             let newPrice = (parseInt(starting_price) + increment).toFixed(2);
 
-            document.getElementById("auction_price").innerHTML =
-              "Price: " + newPrice;
+            context.auction_price = newPrice;
           }
         }
       }, 1000);

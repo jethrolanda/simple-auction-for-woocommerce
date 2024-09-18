@@ -50,8 +50,6 @@ $product_info = array('offers' => $offers);
   </p>
   <p><a href="#" id="myBtn">Make Offer</a></p>
 
-  <p><small>Highest Offer</small></p>
-  <p><small>All Offers</small></p>
 
 </form>
 
@@ -77,14 +75,21 @@ wp_interactivity_state('auction', array(
   'nonce' => wp_create_nonce('modal_place_offer'),
   'uid' => get_current_user_id(),
   'pid' => $product->get_id(),
-  'start_date' => $product->get_auction_start_date(),
-  'end_date' => $product->get_auction_end_date(),
-  'bidding_started' => current_time('timestamp') >= strtotime($start_date)
 ));
 
 
 // Local State/Context
-$context = array('isOpen' => false, 'offers' => $offers_data, 'offerPrice' => 0);
+$context = array(
+  'isOpen' => false,
+  'offers' => $offers_data,
+  'offerPrice' => 0,
+  'start_date' => $product->get_auction_start_date(),
+  'end_date' => $product->get_auction_end_date(),
+  'is_bidding_started' => current_time('timestamp') >= strtotime($start_date),
+  'is_bidding_ended' => current_time('timestamp') >= strtotime($end_date),
+  'time_left' => '',
+  'auction_price' => ''
+);
 // wp_interactivity_data_wp_context() = data-wp-context directive
 ?>
 <div
@@ -94,12 +99,13 @@ $context = array('isOpen' => false, 'offers' => $offers_data, 'offerPrice' => 0)
   <?php echo wp_interactivity_data_wp_context($context); ?>>
 
   <!-- Countdown Timer -->
-  <div data-wp-bind--hidden="state.bidding_started">
-    <p>Time left: <span id="bidding_started"></span></p>
-  </div>
-  <div data-wp-bind--hidden="!state.bidding_started">
-    <p>Starting Soon! <span id="bidding_soon"></span></p>
-  </div>
+  <?php if ($context['is_bidding_ended']) { ?>
+    <div>Bidding Ended!</div>
+  <?php
+  } else {
+    echo '<div data-wp-text="context.time_left"></div>';
+  } ?>
+
 
   <!-- Make Offer -->
   <div>
