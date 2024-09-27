@@ -78,7 +78,12 @@ const { state } = store("auction", {
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         // Display the result in the element with id="bidding_timeout"
-        let timer = `${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds`;
+        days = days > 0 ? `${days} Days` : "";
+        hours = hours > 0 ? `${hours} Hours` : "";
+        minutes = minutes > 0 ? `${minutes} Minutes` : "";
+        seconds = seconds > 0 ? `${seconds} Seconds` : "";
+
+        let timer = `${days} ${hours} ${minutes} ${seconds}`;
         if (context.is_bidding_started) {
           context.time_left = `Time Left: ${timer}`;
         } else {
@@ -86,11 +91,9 @@ const { state } = store("auction", {
         }
 
         // If the count down is finished, write some text
-        if (distance < 0) {
-          clearInterval(x);
-          if (context.is_bidding_started) {
-            context.auction_price = ending_price;
-          }
+        console.log(distance, context.is_bidding_started);
+        if (distance < 0 && context.is_bidding_started === false) {
+          context.is_bidding_started = true;
         } else {
           if (context.is_bidding_started) {
             let totalTime = endDate - startDate;
@@ -103,6 +106,12 @@ const { state } = store("auction", {
 
             context.auction_price = newPrice;
           }
+        }
+
+        if (distance < 0 && context.is_bidding_started) {
+          clearInterval(x);
+          context.auction_price = ending_price;
+          context.time_left = "ENDED";
         }
       }, 1000);
     }

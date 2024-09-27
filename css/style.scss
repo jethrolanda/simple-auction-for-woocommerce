@@ -47,3 +47,9 @@
   }
   li:nth-child(odd) { background: #eeeeee; }
 }
+
+.place-bid{
+  display: flex; 
+  align-items: center;
+  gap: 10px;
+}
