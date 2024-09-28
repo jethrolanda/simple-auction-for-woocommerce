@@ -43,7 +43,7 @@ if (! class_exists('WC_Product_Auction')) {
     public function get_price_html($price = '')
     {
       global $safw;
-      if ($safw->is_free_plugin()) return apply_filters('woocommerce_get_price_html', wc_price($this->get_price()), $this);
+      // if ($safw->is_free_plugin()) return apply_filters('woocommerce_get_price_html', wc_price($this->get_price()), $this);
       // $id = $this->get_safw_product_id();
 
       // if ($this->is_woo_ua_closed() && $this->is_woo_ua_started()) {
@@ -77,13 +77,18 @@ if (! class_exists('WC_Product_Auction')) {
       // } else {
       //   $price = '<span class="woo-ua-auction-price current-bid" data-auction-id="' . $id . '" data-bid="' . $this->get_auction_current_bid() . '" data-status="running">' . __('<span class="woo-ua-current auction">Current bid</span>: ', 'ultimate-woocommerce-auction') . wc_price($this->get_woo_ua_current_bid()) . '</span>';
       // }
-      $price = $this->get_auction_current_bid();
-      $price_html = '<span class="safw-auction-price">';
-      $price_html .= sprintf(__("<span><label>Starting Price:</label> %s</span>", 'simple-auction-for-woocommerce'), wc_price($price));
-      $price_html .= sprintf(__("<span><label>Start Date:</label> %s</span>", 'simple-auction-for-woocommerce'), $this->get_auction_start_date());
-      $price_html .= sprintf(__("<span><label>End Date:</label> %s</span>", 'simple-auction-for-woocommerce'), $this->get_auction_end_date());
-      $price_html .= '</span>';
-      return apply_filters('woocommerce_get_price_html',  $price_html, $this);
+
+      if (is_shop()) {
+        $price = $this->get_auction_current_bid();
+        $price_html = '<span class="safw-auction-price">';
+        $price_html .= wc_price($price);
+        $price_html .= sprintf(__("<span><label>Start Date:</label> %s</span>", 'simple-auction-for-woocommerce'), $this->get_auction_start_date());
+        $price_html .= sprintf(__("<span><label>End Date:</label> %s</span>", 'simple-auction-for-woocommerce'), $this->get_auction_end_date());
+        $price_html .= '</span>';
+        return apply_filters('woocommerce_get_price_html',  $price_html, $this);
+      }
+
+      return apply_filters('woocommerce_get_price_html', wc_price($this->get_price()), $this);
     }
 
     /**

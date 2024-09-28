@@ -70,7 +70,7 @@ $context = array(
 
 
   <!-- Make Offer -->
-  <div>
+  <div class="make-offer">
     <input class="input-text" type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice">
     <button
       class="woocommerce-Button button wp-element-button place-bid"
