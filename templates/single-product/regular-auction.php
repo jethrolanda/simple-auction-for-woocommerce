@@ -40,6 +40,19 @@ wp_interactivity_state('auction', array(
 ));
 
 
+
+$is_bidding_started = current_time('timestamp') >= strtotime($start_date);
+$is_bidding_ended = current_time('timestamp') >= strtotime($end_date);
+
+$now = new DateTime("now", wp_timezone());
+$future_date = new DateTime($start_date, wp_timezone());
+
+$interval = $now->diff($future_date);
+
+echo $interval->format("%a Days %h Hours %i Minutes %s seconds");
+error_log(print_r($now, true));
+error_log(print_r($future_date, true));
+
 // Local State/Context
 $context = array(
   'isOpen' => false,
@@ -47,13 +60,18 @@ $context = array(
   'offerPrice' => 0,
   'start_date' => $product->get_auction_start_date(),
   'end_date' => $product->get_auction_end_date(),
-  'is_bidding_started' => current_time('timestamp') >= strtotime($start_date),
-  'is_bidding_ended' => current_time('timestamp') >= strtotime($end_date),
-  'time_left' => '',
+  'is_bidding_started' => $is_bidding_started,
+  'is_bidding_ended' => $is_bidding_ended,
+  'time_left' =>  $interval->format("%a Days %h Hours %i Minutes %s seconds"),
   'auction_price' => ''
 );
 // wp_interactivity_data_wp_context() = data-wp-context directive
+
+echo "<p>Condition: " . $product->get_auction_item_condition() . "</p>";
+echo "<p>Start Date: " . $start_date . "</p>";
+echo "<p>End Date: " . $end_date . "</p>";
 ?>
+
 <div
   class="auction"
   data-wp-interactive="auction"
