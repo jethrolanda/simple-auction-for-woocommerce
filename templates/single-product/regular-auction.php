@@ -14,21 +14,7 @@ $id = $product->get_id();
 $start_date = get_post_meta($id, '_auction_start_date', true);
 $end_date = get_post_meta($id, '_auction_end_date', true);
 
-$offers = $product->get_all_offers();
-
-$offers_data = array();
-
-if (!empty($offers)) {
-  foreach ($offers as $key => $offer) {
-    $user = get_userdata($offer['uid']);
-    $offers_data[] = array(
-      'id' => $key,
-      'name' => $user->display_name,
-      'price' => $offer['price'],
-      'uid' => $offer['uid']
-    );
-  }
-}
+$offers_data = $product->get_all_offers();
 
 
 // Global State

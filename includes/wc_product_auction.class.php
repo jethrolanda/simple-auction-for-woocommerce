@@ -194,7 +194,21 @@ if (! class_exists('WC_Product_Auction')) {
 
       $offers = get_post_meta($this->get_safw_product_id(), '_auction_offers', true);
 
-      return $offers;
+      $offers_data = array();
+
+      if (!empty($offers)) {
+        foreach ($offers as $key => $offer) {
+          $user = get_userdata($offer['uid']);
+          $offers_data[] = array(
+            'id' => $key,
+            'name' => $user->display_name,
+            'price' => $offer['price'],
+            'uid' => $offer['uid']
+          );
+        }
+      }
+
+      return $offers_data;
     }
   }
 }

@@ -20,6 +20,7 @@ class Simple_Auction_For_WooCommerce
   public $settings;
   public $ajax;
   public $emails;
+  public $account;
 
   const VERSION = '1.0';
 
@@ -42,6 +43,7 @@ class Simple_Auction_For_WooCommerce
     $this->settings = SAFW\Plugin\Settings::instance();
     $this->ajax = SAFW\Plugin\AJAX::instance();
     $this->emails = SAFW\Plugin\Emails::instance();
+    $this->account = SAFW\Plugin\Account::instance();
   }
 
   /**

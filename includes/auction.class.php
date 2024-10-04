@@ -50,6 +50,9 @@ class Auction
         'save_auction_option_field',
       )
     );
+
+    // Add meta box
+    add_action('add_meta_boxes', array($this, 'cmb_add_meta_box'));
   }
 
   /**
@@ -301,7 +304,7 @@ class Auction
    * @author Nitesh Singh
    * @since 1.0
    */
-  function save_auction_option_field($post_id)
+  public function save_auction_option_field($post_id)
   {
     if (wp_verify_nonce($_REQUEST['auction_fields'], 'save_auction_fields')) {
       $data = $_POST['auction'];
@@ -315,5 +318,32 @@ class Auction
         }
       }
     }
+  }
+
+  public function cmb_add_meta_box()
+  {
+    global $post;
+    $product_type = \WC_Product_Factory::get_product_type($post->ID);
+
+    if ($product_type == 'auction') {
+      add_meta_box('custom_post_metabox', 'All Bids', array($this, 'cmb_display_meta_box'), 'product', 'normal');
+    }
+  }
+
+  public function cmb_display_meta_box($post)
+  {
+
+    $product = \wc_get_product($post->ID);
+    $offers = $product->get_all_offers();
+
+    echo '<table>';
+    foreach ($offers as $offer) {
+      echo '<tr>';
+      echo '<td>' . $offer['name'] . '</td>';
+      echo '<td>' . $offer['price'] . '</td>';
+      echo '</tr>';
+    }
+    echo '</table>';
+    error_log(print_r($offers, true));
   }
 }
