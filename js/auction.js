@@ -4,9 +4,9 @@ const { state } = store("auction", {
   state: {},
   actions: {
     *submitOffer() {
+      const context = getContext();
+      context.is_bidding_started = !context.is_bidding_started;
       try {
-        const context = getContext();
-
         const index = context.offers.findIndex((offer) => {
           return offer.uid == state.uid;
         });
@@ -43,6 +43,9 @@ const { state } = store("auction", {
     }
   },
   callbacks: {
+    test: () => {
+      console.log("test");
+    },
     setOfferPrice: () => {
       const context = getContext();
       const { ref } = getElement();
@@ -91,7 +94,6 @@ const { state } = store("auction", {
         }
 
         // If the count down is finished, write some text
-        console.log(distance, context.is_bidding_started);
         if (distance < 0 && context.is_bidding_started === false) {
           context.is_bidding_started = true;
         } else {
@@ -112,6 +114,7 @@ const { state } = store("auction", {
           clearInterval(x);
           context.auction_price = ending_price;
           context.time_left = "ENDED";
+          context.is_bidding_ended = true;
         }
       }, 1000);
     }

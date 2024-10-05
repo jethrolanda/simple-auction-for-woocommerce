@@ -165,6 +165,17 @@ if (! class_exists('WC_Product_Auction')) {
     }
 
     /**
+     * Get Auction Product Bid Increment
+     */
+    public function get_auction_bid_increment()
+    {
+
+      $increment = get_post_meta($this->get_safw_product_id(), '_auction_increment', true);
+
+      return $increment;
+    }
+
+    /**
      * Get Auction Start Date
      */
     public function get_auction_start_date()

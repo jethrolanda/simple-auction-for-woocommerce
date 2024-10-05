@@ -11,8 +11,9 @@ if (! defined('ABSPATH')) {
 global $product;
 
 $id = $product->get_id();
-$start_date = get_post_meta($id, '_auction_start_date', true);
-$end_date = get_post_meta($id, '_auction_end_date', true);
+$start_date = $product->get_auction_start_date();
+$end_date = $product->get_auction_end_date();
+$bid_increment = $product->get_auction_bid_increment();
 
 $offers_data = $product->get_all_offers();
 
@@ -30,14 +31,24 @@ wp_interactivity_state('auction', array(
 $is_bidding_started = current_time('timestamp') >= strtotime($start_date);
 $is_bidding_ended = current_time('timestamp') >= strtotime($end_date);
 
-$now = new DateTime("now", wp_timezone());
-$future_date = new DateTime($start_date, wp_timezone());
+if ($is_bidding_started) {
+  $future_date = new DateTime($end_date, wp_timezone());
+} else {
+  $future_date = new DateTime($start_date, wp_timezone());
+}
 
+$now = new DateTime("now", wp_timezone());
 $interval = $now->diff($future_date);
 
-echo $interval->format("%a Days %h Hours %i Minutes %s seconds");
-error_log(print_r($now, true));
-error_log(print_r($future_date, true));
+$time_left = $interval->format("%a") > 0 ? $interval->format("%a") . ' Days ' : '';
+$time_left .= $interval->format("%h") > 0 ? $interval->format("%h") . ' Hours ' : '';
+$time_left .= $interval->format("%i") > 0 ? $interval->format("%i") . ' Minutes ' : '';
+$time_left .= $interval->format("%s") > 0 ? $interval->format("%s") . ' Seconds' : '';
+
+echo $time_left;
+
+// error_log(print_r($now, true));
+// error_log(print_r($future_date, true));
 
 // Local State/Context
 $context = array(
@@ -48,7 +59,7 @@ $context = array(
   'end_date' => $product->get_auction_end_date(),
   'is_bidding_started' => $is_bidding_started,
   'is_bidding_ended' => $is_bidding_ended,
-  'time_left' =>  $interval->format("%a Days %h Hours %i Minutes %s seconds"),
+  'time_left' =>  'Time Left: ' . $time_left,
   'auction_price' => ''
 );
 // wp_interactivity_data_wp_context() = data-wp-context directive
@@ -75,8 +86,9 @@ echo "<p>End Date: " . $end_date . "</p>";
 
   <!-- Make Offer -->
   <div class="make-offer">
-    <input class="input-text" type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice">
+    <input class="input-text" type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice" step="<?php echo !empty($bid_increment) ? $bid_increment : '1'; ?>">
     <button
+      <?php echo !$is_bidding_started || $is_bidding_ended ? 'disabled' : ''; ?>
       class="woocommerce-Button button wp-element-button place-bid"
       data-wp-on--click="actions.submitOffer">
       <span class="dashicons dashicons-tag"></span> Place Bid
