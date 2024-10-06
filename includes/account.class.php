@@ -88,8 +88,9 @@ class Account
     echo '<h3>Won Bids</h3>';
     echo '<p>Welcome to the WooCommerce support area. As a premium customer, you can submit a ticket should you have any WooCommerce issues with your website, snippets or customization. <i>Please contact your theme/plugin developer for theme/plugin-related support.</i></p>';
     echo do_shortcode(' /* your shortcode here */ ');
+    echo 'Todo: Add status waiting payment etc.';
 
-    echo '<h3>Pending Bids</h3>';
+    echo '<h3>Placed Bids</h3>';
     echo '<p>Welcome to the WooCommerce support area. As a premium customer, you can submit a ticket should you have any WooCommerce issues with your website, snippets or customization. <i>Please contact your theme/plugin developer for theme/plugin-related support.</i></p>';
     echo do_shortcode(' /* your shortcode here */ ');
   }

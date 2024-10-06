@@ -45,7 +45,11 @@ $time_left .= $interval->format("%h") > 0 ? $interval->format("%h") . ' Hours ' 
 $time_left .= $interval->format("%i") > 0 ? $interval->format("%i") . ' Minutes ' : '';
 $time_left .= $interval->format("%s") > 0 ? $interval->format("%s") . ' Seconds' : '';
 
-echo $time_left;
+if ($is_bidding_started) {
+  $time_left = "Time Left: " . $time_left;
+} else {
+  $time_left = "Starting Soon: " . $time_left;
+}
 
 // error_log(print_r($now, true));
 // error_log(print_r($future_date, true));
@@ -55,11 +59,11 @@ $context = array(
   'isOpen' => false,
   'offers' => $offers_data,
   'offerPrice' => 0,
-  'start_date' => $product->get_auction_start_date(),
-  'end_date' => $product->get_auction_end_date(),
+  'start_date' => $start_date,
+  'end_date' => $end_date,
   'is_bidding_started' => $is_bidding_started,
   'is_bidding_ended' => $is_bidding_ended,
-  'time_left' =>  'Time Left: ' . $time_left,
+  'time_left' => $time_left,
   'auction_price' => ''
 );
 // wp_interactivity_data_wp_context() = data-wp-context directive

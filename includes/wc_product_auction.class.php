@@ -43,6 +43,31 @@ if (! class_exists('WC_Product_Auction')) {
     public function get_price_html($price = '')
     {
       global $safw;
+      $start_date = $this->get_auction_start_date();
+      $end_date = $this->get_auction_end_date();
+      $is_bidding_started = current_time('timestamp') >= strtotime($start_date);
+      $is_bidding_ended = current_time('timestamp') >= strtotime($end_date);
+
+      if ($is_bidding_started) {
+        $future_date = new DateTime($end_date, wp_timezone());
+      } else {
+        $future_date = new DateTime($start_date, wp_timezone());
+      }
+
+      $now = new DateTime("now", wp_timezone());
+      $interval = $now->diff($future_date);
+
+      $time_left = $interval->format("%a") > 0 ? $interval->format("%a") . ' Days ' : '';
+      $time_left .= $interval->format("%h") > 0 ? $interval->format("%h") . ' Hours ' : '';
+      $time_left .= $interval->format("%i") > 0 ? $interval->format("%i") . ' Minutes ' : '';
+      $time_left .= $interval->format("%s") > 0 ? $interval->format("%s") . ' Seconds' : '';
+
+      if ($is_bidding_started) {
+        $time_left = "Time Left: " . $time_left;
+      } else {
+        $time_left = "Starting Soon: " . $time_left;
+      }
+
       // if ($safw->is_free_plugin()) return apply_filters('woocommerce_get_price_html', wc_price($this->get_price()), $this);
       // $id = $this->get_safw_product_id();
 
@@ -78,12 +103,30 @@ if (! class_exists('WC_Product_Auction')) {
       //   $price = '<span class="woo-ua-auction-price current-bid" data-auction-id="' . $id . '" data-bid="' . $this->get_auction_current_bid() . '" data-status="running">' . __('<span class="woo-ua-current auction">Current bid</span>: ', 'ultimate-woocommerce-auction') . wc_price($this->get_woo_ua_current_bid()) . '</span>';
       // }
 
+
+
+      $context = array(
+        'start_date' => $start_date,
+        'end_date' => $end_date,
+        'is_bidding_started' => $is_bidding_started,
+        'is_bidding_ended' => $is_bidding_ended,
+        'time_left' =>  $time_left,
+      );
+
       if (is_shop()) {
         $price = $this->get_auction_current_bid();
         $price_html = '<span class="safw-auction-price">';
         $price_html .= wc_price($price);
         $price_html .= sprintf(__("<span><label>Start Date:</label> %s</span>", 'simple-auction-for-woocommerce'), $this->get_auction_start_date());
         $price_html .= sprintf(__("<span><label>End Date:</label> %s</span>", 'simple-auction-for-woocommerce'), $this->get_auction_end_date());
+        $price_html .= '<div class="auction" data-wp-interactive="auction" data-wp-watch="callbacks.timer" ' . wp_interactivity_data_wp_context($context) . '>';
+        if ($context['is_bidding_ended']) {
+          $price_html .= '<div>Bidding Ended!</div>';
+        } else {
+          $price_html .= '<div data-wp-text="context.time_left">' . $time_left . '</div>';
+        }
+
+        $price_html .= '</div>';
         $price_html .= '</span>';
         return apply_filters('woocommerce_get_price_html',  $price_html, $this);
       }
