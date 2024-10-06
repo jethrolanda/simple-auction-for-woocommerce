@@ -4,15 +4,16 @@ const { state } = store("auction", {
   state: {},
   actions: {
     *submitOffer() {
-      const context = getContext();
-      context.is_bidding_started = !context.is_bidding_started;
       try {
+        const context = getContext();
+        context.is_bidding_started = !context.is_bidding_started;
+
         const index = context.offers.findIndex((offer) => {
           return offer.uid == state.uid;
         });
 
         if (context.offerPrice === 0 || context.offerPrice === "") {
-          console.log("Offer price must not empty");
+          toastr.error("Offer price must not empty");
         } else if (index < 0) {
           // If no offer for this user then create new offer
           // else show error
@@ -35,7 +36,7 @@ const { state } = store("auction", {
               }
             });
         } else {
-          console.log("you already provided an offer");
+          toastr.error("You already provided an offer");
         }
       } catch (e) {
         console.log(e);

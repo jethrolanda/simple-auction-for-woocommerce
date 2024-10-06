@@ -80,18 +80,23 @@ class Scripts
             wp_enqueue_style('safw-frontend-styles', SAFW_PLUGIN_URL . 'css/style.min.css', array(), '');
 
             // Countdown
-            wp_enqueue_script('safw-product-countdown-script', SAFW_PLUGIN_URL . 'js/countdown.js', array(), '', true);
+            // wp_enqueue_script('safw-product-countdown-script', SAFW_PLUGIN_URL . 'js/countdown.js', array(), '', true);
 
             // Bid
-            wp_enqueue_script('safw-product-bid-script', SAFW_PLUGIN_URL . 'js/bid.js', array(), '', true);
-            wp_localize_script('safw-product-bid-script', 'bid_script', array(
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'uid' => get_current_user_id(),
-                'pid' => $product->get_id(),
-            ));
+            // wp_enqueue_script('safw-product-bid-script', SAFW_PLUGIN_URL . 'js/bid.js', array(), '', true);
+            // wp_localize_script('safw-product-bid-script', 'bid_script', array(
+            //     'ajax_url' => admin_url('admin-ajax.php'),
+            //     'uid' => get_current_user_id(),
+            //     'pid' => $product->get_id(),
+            // ));
 
             // Interactivity api // wp_register_script_module
             wp_enqueue_script_module('auction', SAFW_PLUGIN_URL . 'js/auction.js', ['@wordpress/interactivity'], false);
+
+            // Toastr
+            // https://www.jqueryscript.net/other/Highly-Customizable-jQuery-Toast-Message-Plugin-Toastr.html
+            wp_enqueue_style('safw-toastr-styles', SAFW_PLUGIN_URL . 'js/lib/toastr/toastr.min.css', array(), '');
+            wp_enqueue_script('safw-toastr-script', SAFW_PLUGIN_URL . 'js/lib/toastr/toastr.min.js', array(), '', true);
         }
     }
 }
