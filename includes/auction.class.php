@@ -189,7 +189,7 @@ class Auction
             'class'       => 'auction_type',
             'label'       => __('Type', 'simple-auction-for-woocommerce'),
             'options'     => apply_filters('safw_auction_type_options', array(
-              'regular'           => __('Regular Auction', 'simple-auction-for-woocommerce'),
+              // 'regular'           => __('Regular Auction', 'simple-auction-for-woocommerce'),
               'english'           => __('English Auction', 'simple-auction-for-woocommerce'),
               'dutch'             => __('Dutch Auction', 'simple-auction-for-woocommerce'),
               // 'incresing_price'   => __('Increasing Price Auction', 'simple-auction-for-woocommerce'),
