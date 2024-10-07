@@ -168,10 +168,19 @@ if (! class_exists('WC_Product_Auction')) {
     /**
      * Get Auction Type
      */
-    public function get_auction_type()
+    public function get_auction_type($name = false)
     {
 
       $type = get_post_meta($this->get_safw_product_id(), '_auction_type', true);
+
+      if ($name) {
+        switch ($type) {
+          case 'english':
+            return 'English Auction';
+          case 'dutch':
+            return 'Dutch Auction';
+        }
+      }
 
       return $type;
     }

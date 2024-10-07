@@ -83,6 +83,7 @@ class Auction
 
     if (method_exists($product, 'get_type') && $product->get_type() == 'auction') {
 
+      error_log(print_r($product->get_auction_type(), true));
       switch ($product->get_auction_type()) {
         case 'english':
           wc_get_template('single-product/single-product.php', array(), '', SAFW_TEMPLATES_ROOT_DIR);

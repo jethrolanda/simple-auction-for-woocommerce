@@ -68,6 +68,7 @@ $context = array(
 );
 // wp_interactivity_data_wp_context() = data-wp-context directive
 
+echo "<p>Type: " . $product->get_auction_type(true) . "</p>";
 echo "<p>Condition: " . $product->get_auction_item_condition() . "</p>";
 echo "<p>Start Date: " . $start_date . "</p>";
 echo "<p>End Date: " . $end_date . "</p>";
