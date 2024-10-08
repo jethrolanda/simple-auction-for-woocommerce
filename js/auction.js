@@ -6,13 +6,23 @@ const { state } = store("auction", {
     *submitOffer() {
       try {
         const context = getContext();
-        context.is_bidding_started = !context.is_bidding_started;
 
-        const index = context.offers.findIndex((offer) => {
+        const { offers, currentOfferInputValue, initialOfferPrice } = context;
+        // Check if user already provided an offer
+        const index = offers.findIndex((offer) => {
           return offer.uid == state.uid;
         });
 
-        if (context.offerPrice === 0 || context.offerPrice === "") {
+        if (
+          parseFloat(currentOfferInputValue) <= parseFloat(initialOfferPrice)
+        ) {
+          toastr.error(
+            `Offer price must not be lower or equal to the previous offer of ${initialOfferPrice}.`
+          );
+        } else if (
+          currentOfferInputValue === 0 ||
+          currentOfferInputValue === ""
+        ) {
           toastr.error("Offer price must not empty");
         } else if (index < 0) {
           // If no offer for this user then create new offer
@@ -20,7 +30,7 @@ const { state } = store("auction", {
           const formData = new FormData();
           formData.append("action", "safw_place_offer");
           formData.append("nonce", state.nonce);
-          formData.append("offer", context.offerPrice);
+          formData.append("offer", currentOfferInputValue);
           formData.append("uid", state.uid);
           formData.append("pid", state.pid);
 
@@ -32,7 +42,10 @@ const { state } = store("auction", {
             .then((data) => {
               console.log(data.status, data.data);
               if (data.status === "success") {
-                context.offers.unshift(data.data);
+                offers.unshift(data.data);
+                toastr.success(
+                  `Your offer of ${currentOfferInputValue} is now accepted.`
+                );
               }
             });
         } else {
@@ -50,7 +63,9 @@ const { state } = store("auction", {
     setOfferPrice: () => {
       const context = getContext();
       const { ref } = getElement();
-      context.offerPrice = ref.value;
+
+      context.currentOfferInputValue = ref.value;
+      // context.initialOfferPrice = ref.value;
     },
     timer: () => {
       const context = getContext();

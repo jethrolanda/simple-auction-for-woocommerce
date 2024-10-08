@@ -11,6 +11,7 @@ if (! defined('ABSPATH')) {
 global $product;
 
 $id = $product->get_id();
+$price = $product->get_auction_current_bid();
 $start_date = $product->get_auction_start_date();
 $end_date = $product->get_auction_end_date();
 $bid_increment = $product->get_auction_bid_increment();
@@ -56,9 +57,11 @@ if ($is_bidding_started) {
 
 // Local State/Context
 $context = array(
-  'isOpen' => false,
+  'type' => $product->get_auction_type(false),
   'offers' => $offers_data,
-  'offerPrice' => 0,
+  'initialOfferPrice' => $price,
+  'currentOfferInputValue' => $price,
+  'bid_increment' => $bid_increment,
   'start_date' => $start_date,
   'end_date' => $end_date,
   'is_bidding_started' => $is_bidding_started,
@@ -91,7 +94,7 @@ echo "<p>End Date: " . $end_date . "</p>";
 
   <!-- Make Offer -->
   <div class="make-offer">
-    <input class="input-text" type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice" step="<?php echo !empty($bid_increment) ? $bid_increment : '1'; ?>">
+    <input class="input-text" type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice" value="<?php echo $price; ?>" step="<?php echo !empty($bid_increment) ? $bid_increment : '1'; ?>">
     <button
       <?php echo !$is_bidding_started || $is_bidding_ended ? 'disabled' : ''; ?>
       class="woocommerce-Button button wp-element-button place-bid"
