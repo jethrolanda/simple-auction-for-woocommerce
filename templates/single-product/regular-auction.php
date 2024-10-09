@@ -93,7 +93,6 @@ echo "<p>End Date: " . $end_date . "</p>";
   <div class="make-offer">
     <input class="input-text" type="number" id="offer-price" name="offer-price" min="1" data-wp-on--keyup="callbacks.setOfferPrice" step="<?php echo !empty($bid_increment) ? $bid_increment : '1'; ?>">
     <button
-      <?php echo !$is_bidding_started || $is_bidding_ended ? 'disabled' : ''; ?>
       class="woocommerce-Button button wp-element-button place-bid"
       data-wp-on--click="actions.submitOffer">
       <span class="dashicons dashicons-tag"></span> Place Bid

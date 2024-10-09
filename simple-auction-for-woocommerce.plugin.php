@@ -21,6 +21,7 @@ class Simple_Auction_For_WooCommerce
   public $ajax;
   public $emails;
   public $account;
+  public $db;
 
   const VERSION = '1.0';
 
@@ -44,6 +45,13 @@ class Simple_Auction_For_WooCommerce
     $this->ajax = SAFW\Plugin\AJAX::instance();
     $this->emails = SAFW\Plugin\Emails::instance();
     $this->account = SAFW\Plugin\Account::instance();
+    $this->db = SAFW\Plugin\Db::instance();
+
+    // Register Activation Hook
+    register_activation_hook(SAFW_PLUGIN_DIR . 'simple-auction-for-woocommerce.php', array($this, 'activate'));
+
+    // Register Deactivation Hook
+    register_deactivation_hook(SAFW_PLUGIN_DIR . 'simple-auction-for-woocommerce.php', array($this, 'deactivate'));
   }
 
   /**
@@ -70,4 +78,23 @@ class Simple_Auction_For_WooCommerce
   {
     return apply_filters('safw_is_free_plugin', true);
   }
+
+  /**
+   * Trigger on activation
+   *
+   * @since 1.0.0
+   */
+  public function activate()
+  {
+
+    // Create custom table
+    $this->db->create_custom_db_table();
+  }
+
+  /**
+   * Trigger on deactivation
+   *
+   * @since 1.0.0
+   */
+  public function deactivate() {}
 }

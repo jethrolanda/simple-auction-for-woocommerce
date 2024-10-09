@@ -75,13 +75,12 @@ class AJAX
         $offers = array();
       }
 
-      array_push($offers, array(
+      array_unshift($offers, array(
         'uid' => $uid,
         'price' => $offer
       ));
 
       update_post_meta($pid, '_auction_offers', $offers);
-      error_log(print_r($offers, true));
 
       $user = get_userdata($uid);
       wp_send_json(array(

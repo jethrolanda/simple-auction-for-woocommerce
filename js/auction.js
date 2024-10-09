@@ -9,22 +9,28 @@ const { state } = store("auction", {
 
         const { offers, currentOfferInputValue, initialOfferPrice } = context;
         // Check if user already provided an offer
-        const index = offers.findIndex((offer) => {
-          return offer.uid == state.uid;
+        const found = offers.findIndex((offer) => {
+          return parseInt(offer.uid) == parseInt(state.uid);
         });
 
-        if (
-          parseFloat(currentOfferInputValue) <= parseFloat(initialOfferPrice)
-        ) {
-          toastr.error(
-            `Offer price must not be lower or equal to the previous offer of ${initialOfferPrice}.`
-          );
+        // Conditions:
+        // 1. Only 1 bid per user
+        // 2. Bid must not be empty
+        // 3. New bid must not be equal or lower than previous or initial bid/offer from seller
+        if (found >= 0) {
+          toastr.error("You already submitted a bid.");
         } else if (
           currentOfferInputValue === 0 ||
           currentOfferInputValue === ""
         ) {
-          toastr.error("Offer price must not empty");
-        } else if (index < 0) {
+          toastr.error("Bid price must not be empty.");
+        } else if (
+          parseFloat(currentOfferInputValue) <= parseFloat(initialOfferPrice)
+        ) {
+          toastr.error(
+            `Bid price must not be lower or equal to the previous bid of ${initialOfferPrice}.`
+          );
+        } else {
           // If no offer for this user then create new offer
           // else show error
           const formData = new FormData();
@@ -44,12 +50,10 @@ const { state } = store("auction", {
               if (data.status === "success") {
                 offers.unshift(data.data);
                 toastr.success(
-                  `Your offer of ${currentOfferInputValue} is now accepted.`
+                  `Your bid of ${currentOfferInputValue} is now accepted.`
                 );
               }
             });
-        } else {
-          toastr.error("You already provided an offer");
         }
       } catch (e) {
         console.log(e);
