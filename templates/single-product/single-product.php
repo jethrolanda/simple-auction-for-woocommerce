@@ -52,9 +52,6 @@ if ($is_bidding_started) {
   $time_left = "Starting Soon: " . $time_left;
 }
 
-// error_log(print_r($now, true));
-// error_log(print_r($future_date, true));
-
 // Local State/Context
 $context = array(
   'type' => $product->get_auction_type(false),

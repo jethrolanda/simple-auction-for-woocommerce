@@ -91,7 +91,21 @@ class Account
     echo 'Todo: Add status waiting payment etc.';
 
     echo '<h3>Placed Bids</h3>';
-    echo '<p>Welcome to the WooCommerce support area. As a premium customer, you can submit a ticket should you have any WooCommerce issues with your website, snippets or customization. <i>Please contact your theme/plugin developer for theme/plugin-related support.</i></p>';
-    echo do_shortcode(' /* your shortcode here */ ');
+
+    global $safw;
+    $bids = $safw->db->get_user_bids(get_current_user_id());
+    // $product = \wc_get_product($post->ID);
+    // $offers = $product->get_all_offers();
+
+    echo '<table>';
+    foreach ($bids as $bid) {
+      $user = get_userdata($bid->user_id);
+      error_log(print_r($user, true));
+      echo '<tr>';
+      echo '<td>' . $user->display_name . '</td>';
+      echo '<td>' . $bid->bid_price . '</td>';
+      echo '</tr>';
+    }
+    echo '</table>';
   }
 }

@@ -83,6 +83,12 @@ class AJAX
       update_post_meta($pid, '_auction_offers', $offers);
 
       $user = get_userdata($uid);
+
+      // Save to db
+      global $safw;
+      $safw->db->save_entry($pid, $uid, $offer);
+      // End Save to db
+
       wp_send_json(array(
         'status' => 'success',
         'data' => array(

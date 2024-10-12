@@ -52,7 +52,7 @@ class Auction
     );
 
     // Add meta box
-    add_action('add_meta_boxes', array($this, 'cmb_add_meta_box'));
+    add_action('add_meta_boxes', array($this, 'list_bids'));
   }
 
   /**
@@ -82,8 +82,6 @@ class Auction
     global $product;
 
     if (method_exists($product, 'get_type') && $product->get_type() == 'auction') {
-
-      error_log(print_r($product->get_auction_type(), true));
       switch ($product->get_auction_type()) {
         case 'english':
           wc_get_template('single-product/single-product.php', array(), '', SAFW_TEMPLATES_ROOT_DIR);
@@ -95,7 +93,6 @@ class Auction
           // regular type
           wc_get_template('single-product/regular-auction.php', array(), '', SAFW_TEMPLATES_ROOT_DIR);
       }
-      // error_log(print_r($product->get_auction_type(), true));
     }
   }
 
@@ -163,8 +160,6 @@ class Auction
       ),
     );
 
-    // unset($product_data_tabs['inventory']);
-    // error_log(print_r($auction_tab + $product_data_tabs, true));
     return $auction_tab + $product_data_tabs;
   }
 
@@ -321,30 +316,37 @@ class Auction
     }
   }
 
-  public function cmb_add_meta_box()
+  /**
+   * List all bids in meta box
+   * 
+   * @since 1.0
+   */
+  public function list_bids()
   {
     global $post;
     $product_type = \WC_Product_Factory::get_product_type($post->ID);
 
     if ($product_type == 'auction') {
-      add_meta_box('custom_post_metabox', 'All Bids', array($this, 'cmb_display_meta_box'), 'product', 'normal');
+      add_meta_box('custom_post_metabox', 'All Bids', array($this, 'display_data'), 'product', 'normal');
     }
   }
 
-  public function cmb_display_meta_box($post)
+  public function display_data($post)
   {
-
-    $product = \wc_get_product($post->ID);
-    $offers = $product->get_all_offers();
+    global $safw;
+    $bids = $safw->db->get_product_bids($post->ID);
+    // $product = \wc_get_product($post->ID);
+    // $offers = $product->get_all_offers();
 
     echo '<table>';
-    foreach ($offers as $offer) {
+    foreach ($bids as $bid) {
+      $user = get_userdata($bid->user_id);
+      error_log(print_r($user, true));
       echo '<tr>';
-      echo '<td>' . $offer['name'] . '</td>';
-      echo '<td>' . $offer['price'] . '</td>';
+      echo '<td>' . $user->display_name . '</td>';
+      echo '<td>' . $bid->bid_price . '</td>';
       echo '</tr>';
     }
     echo '</table>';
-    error_log(print_r($offers, true));
   }
 }

@@ -103,55 +103,33 @@ class Db
    * 
    * @since 1.0
    */
-  public function fscs_get_fuel_savings_data()
+  public function get_product_bids($product_id)
   {
 
-    if (!defined('DOING_AJAX') || !DOING_AJAX) {
-      wp_die();
-    }
+    global $wpdb;
 
-    /**
-     * Verify nonce
-     */
-    if (isset($_POST['nonce']) && !wp_verify_nonce($_POST['nonce'], 'settings_nonce')) {
-      wp_die();
-    }
-
-    try {
-
-      global $wpdb;
-
-      $table_name = $wpdb->prefix . 'fuel_savings_report ORDER BY date DESC';
-      $data = $wpdb->get_results("SELECT * FROM $table_name");
-      $updated_data = array();
-
-      $total = $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
-      $pagination = array(
-        'total' => intval($total),
-      );
-
-      if ($data) {
-        foreach ($data as $d) {
-          foreach (maybe_unserialize($d->calculator_data) as $k => $cd) {
-            $d->{$k} = $cd;
-          }
-          unset($d->calculator_data);
-        }
-      }
-
-      wp_send_json(array(
-        'status' => 'success',
-        'data' => $data,
-        'pagination' => $pagination
-      ));
-    } catch (\Exception $e) {
-
-      wp_send_json(array(
-        'status' => 'error',
-        'message' => $e->getMessage()
-      ));
-    }
+    $table_name = $wpdb->prefix . $this->table_name;
+    $data = $wpdb->get_results("SELECT * FROM $table_name WHERE product_id = " . $product_id);
+    error_log(print_r($data, true));
+    return $data;
   }
+
+  /**
+   * Get fuel savings data.
+   * 
+   * @since 1.0
+   */
+  public function get_user_bids($user_id)
+  {
+
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . $this->table_name;
+    $data = $wpdb->get_results("SELECT * FROM $table_name WHERE user_id = " . $user_id);
+    error_log(print_r($data, true));
+    return $data;
+  }
+
 
   /**
    * Delete fuel savings data item.

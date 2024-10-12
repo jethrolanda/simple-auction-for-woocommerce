@@ -11,7 +11,7 @@ spl_autoload_register(function ($class) {
 
   $path = SAFW_PLUGIN_DIR . 'includes' . DIRECTORY_SEPARATOR . $class;
 
-  // error_log($path);
+
   if (file_exists($path)) {
     require_once($path);
   }
